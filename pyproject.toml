@@ -1,20 +1,27 @@
 [tool.poetry]
-name = "bl-matchmaker"
+name = "matchmaker"
 version = "0.1.0"
 description = ""
 authors = ["Forsee41 <forsee41@gmail.com>"]
 readme = "README.md"
-packages = [{include = "bl_matchmaker"}]
+packages = [{include = "matchmaker"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.88.0"
 pydantic = "^1.10.2"
+pyyaml = "^6.0"
+uvicorn = "^0.20.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 
+[tool.black]
+line-length = 88
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
