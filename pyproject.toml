@@ -1,10 +1,12 @@
 [tool.poetry]
-name = "matchmaker"
+name = "bl-matchmaker"
 version = "0.1.0"
 description = ""
 authors = ["Forsee41 <forsee41@gmail.com>"]
 readme = "README.md"
-packages = [{include = "matchmaker"}]
+packages = [
+	{include = "app"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"

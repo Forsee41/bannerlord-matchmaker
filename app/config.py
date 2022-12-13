@@ -5,7 +5,7 @@ from pathlib import Path
 
 import yaml
 
-from matchmaker.exceptions import LogConfigError
+from .exceptions import LogConfigError
 
 
 DEFAULT_LOG_CONFIG_PATH = "logging.yaml"

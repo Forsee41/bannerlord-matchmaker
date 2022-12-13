@@ -1,6 +1,6 @@
 import logging
 
-from matchmaker.config import setup_loggers
+from .config import setup_loggers
 
 
 setup_loggers()
