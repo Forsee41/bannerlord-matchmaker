@@ -1,0 +1,49 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  default:
+    (): "uvicorn.logging.DefaultFormatter"
+    format: "%(asctime)s %(levelprefix)-9s %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+  access:
+    (): "uvicorn.logging.AccessFormatter"
+    format: '%(asctime)s %(levelprefix)-9s %(client_addr)s - "%(request_line)s" %(status_code)s'
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  default:
+    class: logging.StreamHandler
+    formatter: default
+    stream: ext://sys.stderr
+
+  access:
+    class: logging.StreamHandler
+    formatter: default
+    stream: ext://sys.stdout
+
+  console:
+    class: logging.StreamHandler
+    formatter: default
+
+loggers:
+  root:
+    level: INFO
+    propagate: True
+    handlers:
+      - console
+
+  uvicorn:
+    level: INFO
+    handlers:
+      - default
+
+  uvicorn.error:
+    level: INFO
+
+  uvicorn.access:
+    level: INFO
+    propagate: False
+    handlers:
+      - access
