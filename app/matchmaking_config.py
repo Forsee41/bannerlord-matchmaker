@@ -37,4 +37,4 @@ class ConfigHandler:
         config = MatchmakingConfig.parse_obj(new_config)
 
 
-config_instance = ConfigHandler.generate_from_dict({})
+matchmaking_config = ConfigHandler.generate_from_dict({})

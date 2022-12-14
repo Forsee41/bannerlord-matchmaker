@@ -19,12 +19,12 @@ def get_log_config_path() -> Path:
     """
 
     log_config_path_string = os.getenv(
-        EnvVarNames.log_config_path, DEFAULT_LOG_CONFIG_PATH
+        EnvVarNames.log_config_file_path, DEFAULT_LOG_CONFIG_PATH
     )
     try:
         log_config_path = Path(log_config_path_string)
     except Exception:
-        error_msg = f"{EnvVarNames.log_config_path} env var is invalid"
+        error_msg = f"{EnvVarNames.log_config_file_path} env var is invalid"
         # using a root logger since module
         # level loggers can't be properly constructed
         logging.getLogger().error(error_msg)

@@ -7,7 +7,7 @@ from pydantic import BaseConfig, BaseSettings
 import yaml
 
 from exceptions import ConfigError
-from enums import EnvVariableNames
+from enums import EnvVarNames
 
 
 log = logging.getLogger(__name__)
@@ -24,10 +24,10 @@ def yaml_config_settings_source(_: BaseSettings) -> dict[str, Any]:
     """
     Settings source that loads variables from a YAML file
     """
-    env_config_file_path = os.getenv(EnvVariableNames.config_file_path, None)
+    env_config_file_path = os.getenv(EnvVarNames.config_file_path, None)
     if env_config_file_path is None:
         log.warning(
-            f"Couldn't load {EnvVariableNames.config_file_path} env var,"
+            f"Couldn't load {EnvVarNames.config_file_path} env var,"
             f"trying default config path"
         )
     config_file_path = env_config_file_path or DEFAULT_CONFIG_FILE_PATH
