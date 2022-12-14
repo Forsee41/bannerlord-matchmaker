@@ -1,0 +1,4 @@
+main_service_config:
+  auth_route: ""
+  refresh_token_route: ""
+  token_refresh_time_seconds: 1800
