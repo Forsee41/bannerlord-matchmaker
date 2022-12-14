@@ -5,10 +5,11 @@ from pathlib import Path
 
 import yaml
 
-from .exceptions import LogConfigError
+from exceptions import ConfigError
+from enums import EnvVarNames
 
 
-DEFAULT_LOG_CONFIG_PATH = "logging.yaml"
+DEFAULT_LOG_CONFIG_PATH = "../logging.yaml"
 
 
 def get_log_config_path() -> Path:
@@ -17,11 +18,13 @@ def get_log_config_path() -> Path:
     Uses default path if env var is not set
     """
 
-    log_config_path_string = os.getenv("LOG_CONFIG_PATH", DEFAULT_LOG_CONFIG_PATH)
+    log_config_path_string = os.getenv(
+        EnvVarNames.log_config_path, DEFAULT_LOG_CONFIG_PATH
+    )
     try:
         log_config_path = Path(log_config_path_string)
     except Exception:
-        error_msg = "LOG_CONFIG_PATH env var is invalid"
+        error_msg = f"{EnvVarNames.log_config_path} env var is invalid"
         # using a root logger since module
         # level loggers can't be properly constructed
         logging.getLogger().error(error_msg)
@@ -41,7 +44,7 @@ def get_logger_config() -> dict:
             f"Error loading logging config file, perhaps log config path is invalid"
         )
         logging.getLogger().error(error_msg)
-        raise LogConfigError(error_msg)
+        raise ConfigError(error_msg)
     return log_config_dict
 
 
