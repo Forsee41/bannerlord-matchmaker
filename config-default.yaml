@@ -2,3 +2,8 @@ main_service_config:
   auth_route: ""
   refresh_token_route: ""
   token_refresh_time_seconds: 1800
+
+env_config:
+  dev_mode: true
+  use_local_mm_config: true
+  local_mm_config_path: "../config-matchmaking.yaml"
