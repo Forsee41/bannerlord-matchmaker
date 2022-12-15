@@ -29,27 +29,22 @@ class MainServiceAuthentifier:
     refresh_token_route = main_service_config.refresh_token_route
 
     def get_env_service_creds(self) -> MainServiceCreds:
-        main_service_login = os.getenv(EnvVarNames.SERVICE_LOGIN, None)
-        main_service_password = os.getenv(EnvVarNames.SERVICE_PASSWORD, None)
-        main_service_address = os.getenv(EnvVarNames.SERVICE_ADDRESS, None)
 
-        if main_service_login is None:
-            error_msg = f"Couldn't load {EnvVarNames.SERVICE_LOGIN} env var"
-            log.error(error_msg)
-            raise EnvironmentError(error_msg)
-
-        if main_service_address is None:
-            error_msg = f"Couldn't load {EnvVarNames.SERVICE_ADDRESS} env var"
-            log.error(error_msg)
-            raise EnvironmentError(error_msg)
-
-        if main_service_password is None:
-            error_msg = f"Couldn't load {EnvVarNames.SERVICE_PASSWORD} env var"
-            log.error(error_msg)
-            raise EnvironmentError(error_msg)
+        env_vars = {
+            EnvVarNames.SERVICE_ADDRESS: "",
+            EnvVarNames.SERVICE_LOGIN: "",
+            EnvVarNames.SERVICE_PASSWORD: "",
+        }
+        for env_var_name in env_vars:
+            value = os.getenv(env_var_name)
+            if value is None:
+                error_msg = f"Couldn't load {env_var_name} env var"
+                log.error(error_msg)
+                raise EnvironmentError(error_msg)
+            env_vars[env_var_name] = value
 
         return MainServiceCreds(
-            address=main_service_address,
-            login=main_service_login,
-            password=main_service_password,
+            address=env_vars[EnvVarNames.SERVICE_ADDRESS],
+            login=env_vars[EnvVarNames.SERVICE_LOGIN],
+            password=env_vars[EnvVarNames.SERVICE_PASSWORD],
         )
