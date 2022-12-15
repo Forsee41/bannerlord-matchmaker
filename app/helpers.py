@@ -21,10 +21,9 @@ def get_config_from_yaml(config_file_path: Path) -> dict[str, Any]:
         with open(config_file_path) as f:
             config_dict = yaml.safe_load(f)
     except Exception:
-        error_msg = "Error loading config file, perhaps config path is invalid or"
-        "file data is corrupted"
-        log.error(error_msg)
-        raise ConfigError(error_msg)
+        raise ConfigError(
+            "Error loading config file, perhaps config path is invalid or"
+        )
 
     return config_dict
 

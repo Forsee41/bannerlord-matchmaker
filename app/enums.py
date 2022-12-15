@@ -18,6 +18,12 @@ class PlayerClass(str, Enum):
     inf = "Infantry"
     arch = "Archer"
 
+class Proficiency(str, Enum):
+    main = "Main"
+    second = "Secondary"
+    flex = "Flex"
+    offclass = "Offclass"
+
 
 class Environments(str, Enum):
     DEV = "dev"
