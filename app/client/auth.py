@@ -29,22 +29,22 @@ class MainServiceAuthentifier:
     refresh_token_route = main_service_config.refresh_token_route
 
     def get_env_service_creds(self) -> MainServiceCreds:
-        main_service_login = os.getenv(EnvVarNames.service_login, None)
-        main_service_password = os.getenv(EnvVarNames.service_password, None)
-        main_service_address = os.getenv(EnvVarNames.service_address, None)
+        main_service_login = os.getenv(EnvVarNames.SERVICE_LOGIN, None)
+        main_service_password = os.getenv(EnvVarNames.SERVICE_PASSWORD, None)
+        main_service_address = os.getenv(EnvVarNames.SERVICE_ADDRESS, None)
 
         if main_service_login is None:
-            error_msg = f"Couldn't load {EnvVarNames.service_login} env var"
+            error_msg = f"Couldn't load {EnvVarNames.SERVICE_LOGIN} env var"
             log.error(error_msg)
             raise EnvironmentError(error_msg)
 
         if main_service_address is None:
-            error_msg = f"Couldn't load {EnvVarNames.service_address} env var"
+            error_msg = f"Couldn't load {EnvVarNames.SERVICE_ADDRESS} env var"
             log.error(error_msg)
             raise EnvironmentError(error_msg)
 
         if main_service_password is None:
-            error_msg = f"Couldn't load {EnvVarNames.service_password} env var"
+            error_msg = f"Couldn't load {EnvVarNames.SERVICE_PASSWORD} env var"
             log.error(error_msg)
             raise EnvironmentError(error_msg)
 

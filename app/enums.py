@@ -1,16 +1,24 @@
-from enum import Enum
+from enum import Enum, auto
 
 
 class EnvVarNames(str, Enum):
     """Class aggregates all environment variable names"""
-    config_file_path = "CONFIG_FILE_PATH"   # optional
-    log_config_file_path = "LOG_CONFIG_PATH"    # optional
-    service_login = "MAIN_SERVICE_LOGIN"
-    service_password = "MAIN_SERVICE_PASSWORD"
-    service_address = "MAIN_SERVICE_ADDRESS"
+
+    CONFIG_FILE_PATH = "CONFIG_FILE_PATH"
+    LOG_CONFIG_FILE_PATH = "LOG_CONFIG_PATH"
+    MM_CONFIG_FILE_PATH = "MM_CONFIG_FILE_PATH"
+    SERVICE_LOGIN = "MAIN_SERVICE_LOGIN"
+    SERVICE_PASSWORD = "MAIN_SERVICE_PASSWORD"
+    SERVICE_ADDRESS = "MAIN_SERVICE_ADDRESS"
+    ENVIRONMENT = "ENVIRONMENT"
+
 
 class PlayerClass(str, Enum):
-    cav = 'Cavalry'
-    inf = 'Infantry'
-    arch = 'Archer'
+    cav = "Cavalry"
+    inf = "Infantry"
+    arch = "Archer"
 
+
+class Environments(str, Enum):
+    DEV = "dev"
+    PROD = "prod"

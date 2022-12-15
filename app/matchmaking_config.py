@@ -1,7 +1,12 @@
-from typing import Any
+import logging
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, config
 
+from config import env_config
+from helpers import get_config_from_yaml
+
+
+log = logging.getLogger(__name__)
 
 
 class ValidationConfig(BaseModel):
@@ -13,28 +18,36 @@ class ClassesConfig(BaseModel):
     pass
 
 
-class MatchmakingConfig(BaseModel):
-    def __init__(self, **data: Any) -> None:
-        super().__init__(**data)
-        self.__handler = ConfigHandler
-
+class MatchmakingConfig:
     classes: ClassesConfig
     validation: ValidationConfig
 
-    def update_global_config(self, new_config: dict) -> None:
-        self.__handler.update_config(new_config)
+
+class MatchmakingConfigRemote(MatchmakingConfig, BaseModel):
+    pass
 
 
+class MatchmakingConfigLocal(MatchmakingConfig, BaseModel):
+    pass
 
-class ConfigHandler:
+
+class MatchmakingConfigHandler:
+    @classmethod
+    def generate_from_local_file(cls) -> MatchmakingConfigLocal:
+        config_path = env_config.local_mm_config_path
+        config_dict = get_config_from_yaml(config_path)
+        return MatchmakingConfigLocal.parse_obj(config_dict)
+        
+
     @classmethod
     def generate_from_dict(cls, config: dict) -> MatchmakingConfig:
-        return MatchmakingConfig.parse_obj(config)
+        return MatchmakingConfigRemote.parse_obj(config)
+
 
     @classmethod
     def update_config(cls, new_config: dict):
         global config
-        config = MatchmakingConfig.parse_obj(new_config)
+        config = MatchmakingConfigRemote.parse_obj(new_config)
 
 
-matchmaking_config = ConfigHandler.generate_from_dict({})
+matchmaking_config = MatchmakingConfigHandler.generate_from_local_file()

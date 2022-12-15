@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import logging
-
+from config import main_service_config
 from . import routes
 
 
@@ -16,6 +16,9 @@ def register_events(app: FastAPI) -> None:
     @app.on_event("startup")
     async def init_app():
         log.info("Starting FastAPI app server")
+        log.info(
+            f"Token refresh time is {main_service_config.token_refresh_time_seconds} seconds"
+        )
 
     assert init_app
 
@@ -26,6 +29,3 @@ def create_app() -> FastAPI:
     register_routers(app)
 
     return app
-
-
-app = create_app()
