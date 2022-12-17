@@ -2,7 +2,6 @@ import logging
 import os
 from dataclasses import dataclass
 
-import httpx
 
 from config import main_service_config
 from enums import EnvVarNames
