@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class EnvVarNames(str, Enum):
-    """Class aggregates all environment variable names"""
+    """Aggregates all environment variable names"""
 
     CONFIG_FILE_PATH = "CONFIG_FILE_PATH"
     LOG_CONFIG_FILE_PATH = "LOG_CONFIG_PATH"
@@ -13,10 +13,16 @@ class EnvVarNames(str, Enum):
     ENVIRONMENT = "ENVIRONMENT"
 
 
+class Environments(str, Enum):
+    DEV = "dev"
+    PROD = "prod"
+
+
 class PlayerClass(str, Enum):
     cav = "Cavalry"
     inf = "Infantry"
     arch = "Archer"
+
 
 class Proficiency(str, Enum):
     main = "Main"
@@ -25,6 +31,17 @@ class Proficiency(str, Enum):
     offclass = "Offclass"
 
 
-class Environments(str, Enum):
-    DEV = "dev"
-    PROD = "prod"
+class TeamDesignations(str, Enum):
+    team1 = "team1"
+    team2 = "team2"
+
+
+class MapFacFieldNames(str, Enum):
+    fac1 = "fac1"
+    fac2 = "fac2"
+    map = "map"
+
+
+class MapType(str, Enum):
+    open = "open"
+    close = "close"

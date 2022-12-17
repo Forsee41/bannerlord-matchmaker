@@ -8,17 +8,18 @@ import matchmaking_config
 config = matchmaking_config.matchmaking_config
 
 
-class Player(BaseModel):
+class PlayerModel(BaseModel):
+    id: str
     mmr: int
-    main: PlayerClass = Field(alias='mainClass')
-    secondary: PlayerClass = Field(alias='secondaryClass')
+    main: PlayerClass = Field(alias="mainClass")
+    secondary: PlayerClass = Field(alias="secondaryClass")
     nickname: str
-    discord_id: str = Field(alias='discordId')
+    discord_id: str = Field(alias="discordId")
     clan: str
-    top: str = Field(alias='position')
-    matches: int = Field(alias='played')
+    top: str = Field(alias="position")
+    matches: int = Field(alias="played")
     wins: int
-    winrate: float = Field(alias='wr')
+    winrate: float = Field(alias="wr")
     rounds: int
     assists: int
     sr: float
@@ -26,7 +27,7 @@ class Player(BaseModel):
     kills: int
     ar: float
     kr: float
-    mvp_rate: float = Field(alias='mvpr')
+    mvp_rate: float = Field(alias="mvpr")
     score: float
     igl: bool
     country: str
@@ -39,6 +40,10 @@ class Player(BaseModel):
 
     class Config:
         use_enum_values = True
+
+
+class PlayerReponseModel(BaseModel):
+    ...
 
 
 class MatchmakingConfig(MMConfig):

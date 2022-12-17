@@ -48,7 +48,7 @@ class PlayerPicker:
 
     def split_into_games(self, enrolled_players: list[Player]) -> list[list[Player]]:
         result = []
-        enrolled_players.sort(key=(lambda player:player.mmr))
+        enrolled_players.sort(key=(lambda player:player.mmr_raw))
         for game in range(self.games_amount):
             player_group = enrolled_players[game*12:(game+1)*12]
             result.append(player_group)
