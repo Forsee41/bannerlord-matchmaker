@@ -36,6 +36,9 @@ pytest = "^7.2.0"
 [tool.black]
 line-length = 88
 
+[mypy]
+mypy_path = "app"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
