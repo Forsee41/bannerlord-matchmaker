@@ -1,6 +1,6 @@
 import logging
 
-from pydantic import BaseModel, config
+from pydantic import BaseModel
 
 from config import env_config
 from helpers import get_config_from_yaml
@@ -9,17 +9,22 @@ from helpers import get_config_from_yaml
 log = logging.getLogger(__name__)
 
 
-class ValidationConfig(BaseModel):
-    max_mmr: int
-    min_mmr: int
-
-
 class ClassesConfig(BaseModel):
     pass
 
 
+class MapModel(BaseModel):
+    name: str
+    type: str
+
+
 class MatchupConfig(BaseModel):
+    maps: list[MapModel]
+    factions: list[str]
+    matchup_weights: dict[str, int]
+    matchup_weight_defaults: dict[str, dict[str, int]]
     pass
+
 
 class BalanceConfig(BaseModel):
     open_map_max_cav: int
@@ -29,36 +34,32 @@ class BalanceConfig(BaseModel):
     pass
 
 
-class MatchmakingConfig:
+class MatchmakingConfig(BaseModel):
     classes: ClassesConfig
-    validation: ValidationConfig
     matchups: MatchupConfig
     balance: BalanceConfig
 
 
-class MatchmakingConfigRemote(MatchmakingConfig, BaseModel):
-    pass
-
-
-class MatchmakingConfigLocal(MatchmakingConfig, BaseModel):
-    pass
-
-
 class MatchmakingConfigHandler:
     @classmethod
-    def generate_from_local_file(cls) -> MatchmakingConfigLocal:
+    def generate_from_local_file(cls) -> MatchmakingConfig:
         config_path = env_config.local_mm_config_path
         config_dict = get_config_from_yaml(config_path)
-        return MatchmakingConfigLocal.parse_obj(config_dict)
+        return MatchmakingConfig.parse_obj(config_dict)
 
     @classmethod
     def generate_from_dict(cls, config: dict) -> MatchmakingConfig:
-        return MatchmakingConfigRemote.parse_obj(config)
+        return MatchmakingConfig.parse_obj(config)
 
     @classmethod
-    def update_config(cls, new_config: dict):
+    def update_config(cls, data: dict) -> None:
         global config
-        config = MatchmakingConfigRemote.parse_obj(new_config)
+        new_conf = config.copy(update=data)
+        # changing an existing mutable object will allow to dynamically
+        # change the config in a runtime since no new objects are created
+        config.classes = new_conf.classes
+        config.matchups = new_conf.matchups
+        config.balance = new_conf.balance
 
 
-matchmaking_config = MatchmakingConfigHandler.generate_from_local_file()
+config = MatchmakingConfigHandler.generate_from_local_file()

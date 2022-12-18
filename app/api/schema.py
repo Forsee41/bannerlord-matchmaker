@@ -2,10 +2,7 @@ from pydantic import BaseModel, Field
 
 from matchmaking_config import MatchmakingConfig as MMConfig
 from enums import PlayerClass
-import matchmaking_config
-
-
-config = matchmaking_config.matchmaking_config
+from matchmaking_config import config
 
 
 class PlayerModel(BaseModel):

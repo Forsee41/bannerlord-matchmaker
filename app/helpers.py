@@ -2,6 +2,7 @@ from typing import Any
 import logging
 from pathlib import Path
 import os
+import json
 
 import yaml
 
@@ -13,6 +14,22 @@ log = logging.getLogger(__name__)
 DEFAULT_CONFIG_FILE_PATH = "../config-default.yaml"
 
 
+def get_config_from_json(config_file_path: Path) -> dict[str, Any]:
+    """
+    Settings source that loads variables from a JSON file
+    """
+    try:
+        with open(config_file_path) as f:
+            config_dict = json.load(f)
+    except Exception:
+        raise ConfigError(
+            "Error loading config file, perhaps config path is invalid or "
+            "data is corrupted"
+        )
+
+    return config_dict
+
+
 def get_config_from_yaml(config_file_path: Path) -> dict[str, Any]:
     """
     Settings source that loads variables from a YAML file
@@ -22,7 +39,8 @@ def get_config_from_yaml(config_file_path: Path) -> dict[str, Any]:
             config_dict = yaml.safe_load(f)
     except Exception:
         raise ConfigError(
-            "Error loading config file, perhaps config path is invalid or"
+            "Error loading config file, perhaps config path is invalid or "
+            "data is corrupted"
         )
 
     return config_dict
