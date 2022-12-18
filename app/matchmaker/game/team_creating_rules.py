@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from matchmaker.team import Team
+from matchmaker.game.team import Team
 
 
 class TeamCreatingRule(ABC):

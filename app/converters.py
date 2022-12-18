@@ -6,7 +6,7 @@ import matchmaking_config
 config = matchmaking_config.matchmaking_config
 
 
-class PlayerAdapter:
+class PlayerConverter:
     """
     Adapts matchmaking data types to an api models
     """
@@ -16,5 +16,5 @@ class PlayerAdapter:
         ...
 
     @staticmethod
-    def get_response_model_inst(player: Player) -> PlayerReponseModel:
+    def export_to_response_model(player: Player) -> PlayerReponseModel:
         ...
