@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class ClassProficiency(dict):
-    def __init__(self, cav: PlayerClass, arch: PlayerClass, inf: PlayerClass):
+    def __init__(self, cav: Proficiency, arch: Proficiency, inf: Proficiency):
         super().__init__()
         self[PlayerClass.cav] = cav
         self[PlayerClass.arch] = arch
