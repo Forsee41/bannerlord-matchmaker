@@ -1,12 +1,10 @@
 [tool.poetry]
 name = "bl-matchmaker"
 version = "0.1.0"
-description = ""
+description = "Matchmaker service for Bannerlord Matchmaking system"
 authors = ["Forsee41 <forsee41@gmail.com>"]
 readme = "README.md"
-packages = [
-	{include = "app"}
-]
+packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -17,21 +15,15 @@ uvicorn = "^0.20.0"
 fastapi-utils = "^0.2.1"
 httpx = "^0.23.1"
 
-[tool.pytest.ini_options]
-pythonpath = [
-  "app"
-]
-
-[tool.pyright]
-include = ["app"]
-venvPath = "app"
-executionEnvironments = [
-  { root = "tests", extraPaths = ["app"]},
-]
-
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
+mypy = "^0.991"
+
+[tool.pytest.ini_options]
+pythonpath = ["app"]
+
+[tool.pyright]
+executionEnvironments = [{ root = "tests", extraPaths = ["app"]}]
 
 [tool.black]
 line-length = 88
