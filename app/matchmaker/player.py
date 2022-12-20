@@ -31,6 +31,14 @@ class ClassProficiency(dict):
                 "Player must have a second class or at least one flex class"
             )
 
+        if prof_count[Proficiency.flex] > 0 and prof_count[Proficiency.second] > 0:
+            raise ProficiencyValidationError(
+                "Player must not have a second and a flex class simultaneously"
+            )
+
+        if prof_count[Proficiency.second] > 1:
+            raise ProficiencyValidationError("Player must have max 1 second class")
+
 
 @total_ordering
 class Player:
