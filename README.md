@@ -32,7 +32,7 @@ Setup process for local testing, api docs checking, development etc.
 1. Install dev dependencies if needed `poetry install --with dev`
 1. Set all required environment variables. Check `EnvVarNames` enum inside `enums.py` for the list of required variables
 1. Activate poetry venv `poetry shell`
-1. Run locally via `python main.py` from inside an `app` directory
+1. Run locally via `python app/main.py` from inside the project's root
 
 ## Development and testing
 
@@ -41,7 +41,7 @@ source to avoid writing painstaking Dockerfile to pull out all the
 unused files in prod
 
 For testing install dev dependencies via `poetry install --with dev`,
-then run `pytest` from inside the project's root
+then run `python -m pytest` from inside the project's root
 Add tests into the `tests` folder. It's structure mirrors the project's source
 
 TODO: set up a CI pipeline
