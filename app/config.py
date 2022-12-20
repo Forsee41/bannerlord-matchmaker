@@ -36,7 +36,7 @@ class _ConfigAggregator(BaseModel):
     """
     Class contains all other config references
     Is not meant do be used directly
-    Used mainly for easier pydantic config file loading
+    Used mainly for easier pydantic source loading
     """
 
     main_service_config: MainServiceConfig

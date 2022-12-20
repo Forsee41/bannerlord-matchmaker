@@ -37,8 +37,7 @@ Setup process for local testing, api docs checking, development etc.
 ## Development and testing
 
 Project uses `pytest` for testing. Tests dir is separated from the project's
-source to avoid writing painstaking Dockerfile to pull out all the 
-unused files in prod
+source to avoid writing painstaking Dockerfile
 
 For testing install dev dependencies via `poetry install --with dev`,
 then run `python -m pytest` from inside the project's root
