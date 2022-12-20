@@ -17,16 +17,16 @@ class ClassProficiency(dict):
         self._validate_input()
 
     def _validate_input(self) -> None:
-        role_count = {role: 0 for role in self}
+        prof_count = {prof: 0 for prof in Proficiency}
 
         for game_class in self:
-            if game_class in role_count:
-                role_count[game_class] += 1
+            if self[game_class] in prof_count:
+                prof_count[self[game_class]] += 1
 
-        if role_count[Proficiency.main] != 1:
+        if prof_count[Proficiency.main] != 1:
             raise ProficiencyValidationError("Player must have one main class")
 
-        if role_count[Proficiency.flex] + role_count[Proficiency.second] == 0:
+        if prof_count[Proficiency.flex] + prof_count[Proficiency.second] == 0:
             raise ProficiencyValidationError(
                 "Player must have a second class or at least one flex class"
             )
