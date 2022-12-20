@@ -11,7 +11,7 @@ from enums import EnvVarNames
 
 
 log = logging.getLogger(__name__)
-DEFAULT_CONFIG_FILE_PATH = "../config-default.yaml"
+DEFAULT_CONFIG_FILE_PATH = "config-default.yaml"
 
 
 def get_config_from_json(config_file_path: Path) -> dict[str, Any]:
@@ -37,10 +37,10 @@ def get_config_from_yaml(config_file_path: Path) -> dict[str, Any]:
     try:
         with open(config_file_path) as f:
             config_dict = yaml.safe_load(f)
-    except Exception:
+    except Exception as e:
         raise ConfigError(
             "Error loading config file, perhaps config path is invalid or "
-            "data is corrupted"
+            "data is corrupted", e
         )
 
     return config_dict

@@ -3,7 +3,8 @@ import logging
 from pydantic import BaseModel
 
 from config import env_config
-from helpers import get_config_from_yaml
+from helpers import get_config_from_json
+from enums import MapType
 
 
 log = logging.getLogger(__name__)
@@ -17,12 +18,16 @@ class MapModel(BaseModel):
     name: str
     type: str
 
+class MatchupModel(BaseModel):
+    fac1: str
+    fac2: str
+    weight: int
 
 class MatchupConfig(BaseModel):
     maps: list[MapModel]
     factions: list[str]
-    matchup_weights: dict[str, int]
-    matchup_weight_defaults: dict[str, dict[str, int]]
+    matchup_weights: dict[str, list[MatchupModel]]
+    matchup_weight_defaults: dict[MapType, list[MatchupModel]]
     pass
 
 
@@ -44,7 +49,7 @@ class MatchmakingConfigHandler:
     @classmethod
     def generate_from_local_file(cls) -> MatchmakingConfig:
         config_path = env_config.local_mm_config_path
-        config_dict = get_config_from_yaml(config_path)
+        config_dict = get_config_from_json(config_path)
         return MatchmakingConfig.parse_obj(config_dict)
 
     @classmethod

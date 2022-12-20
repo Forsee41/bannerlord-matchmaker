@@ -6,4 +6,4 @@ main_service_config:
 env_config:
   dev_mode: true
   use_local_mm_config: true
-  local_mm_config_path: "../config-matchmaking.yaml"
+  local_mm_config_path: "config-matchmaking.json"

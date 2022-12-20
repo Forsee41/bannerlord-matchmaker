@@ -9,7 +9,7 @@ from exceptions import ConfigError
 from enums import EnvVarNames
 
 
-DEFAULT_LOG_CONFIG_PATH = "../logging.yaml"
+DEFAULT_LOG_CONFIG_PATH = "logging.yaml"
 
 
 def get_log_config_path() -> Path:
