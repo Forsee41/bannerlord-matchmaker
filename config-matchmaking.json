@@ -1,51 +1,56 @@
 {
 	"classes": {},
-	"balance": {},
+	"balance": {
+		"open_map_max_cav": 2,
+		"close_map_max_cav": 2,
+		"open_map_max_arch": 2,
+		"close_map_max_arch": 2
+	},
 	"matchups": {
 		"maps": [
 			{
-			'name': 'Echerion',
-			'type': 'open'
+			"name": "Echerion",
+			"type": "open"
 			},
 			{
-			'name': 'Trading post',
-			'type': 'open'
+			"name": "Trading post",
+			"type": "open"
 			},
 			{
-			'name': 'Xauna',
-			'type': 'open'
+			"name": "Xauna",
+			"type": "open"
 			},
 			{
-			'name': 'Town outskirts',
-			'type': 'open'
+			"name": "Town outskirts",
+			"type": "open"
 			},
 			{
-			'name': 'Port Omor',
-			'type': 'open'
+			"name": "Port Omor",
+			"type": "open"
 			},
 			{
-			'name': 'Sharis',
-			'type': 'open'
+			"name": "Sharis",
+			"type": "open"
 			},
 			{
-			'name': 'Urikskalaar',
-			'type': 'open'
+			"name": "Urikskalaar",
+			"type": "open"
 			},
 			{
-			'name': 'Zendyar',
-			'type': 'open'
+			"name": "Zendyar",
+			"type": "open"
 			}
 		],
 		"factions": [
-    'Sturgia',
-    'Battania',
-    'Aserai',
-    'Vlandia',
-    'Empire',
-    'Khuzait'
+    "Sturgia",
+    "Battania",
+    "Aserai",
+    "Vlandia",
+    "Empire",
+    "Khuzait"
 		],
 		"matchup_weight_defaults": {
-			"open": {
+			"open": [
 				{
 					"fac1": "Empire",
 					"fac2": "Khuzait",
@@ -150,9 +155,9 @@
 					"fac1": "Aserai",
 					"fac2": "Vlandia",
 					"weight": 100
-				},
-			}
-		"close": {
+				}
+			],
+		"close": [
 				{
 					"fac1": "Sturgia",
 					"fac2": "Sturgia",
@@ -258,10 +263,10 @@
 					"fac2": "Vlandia",
 					"weight": 150
 				}
-			}
+			]
 		},
 		"matchup_weights": {
-			"Xauna": {
+			"Xauna": [
 				{
 					"fac1": "Sturgia",
 					"fac2": "Sturgia",
@@ -367,8 +372,8 @@
 					"fac2": "Vlandia",
 					"weight": 150
 				}
-			}
-		"Echerion": {
+			],
+		"Echerion": [
 				{
 					"fac1": "Empire",
 					"fac2": "Khuzait",
@@ -474,115 +479,8 @@
 					"fac2": "Vlandia",
 					"weight": 150
 				}
-			},
-			"Trading post" = {
-				{
-					"fac1": "Empire",
-					"fac2": "Khuzait",
-					"weight": 600
-				},
-				{
-					"fac1": "Battania",
-					"fac2": "Khuzait",
-					"weight": 600
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Empire",
-					"weight": 400
-				},
-				{
-					"fac1": "Battania",
-					"fac2": "Aserai",
-					"weight": 600
-				},
-				{
-					"fac1": "Battania",
-					"fac2": "Empire",
-					"weight": 150
-				},
-				{
-					"fac1": "Khuzait",
-					"fac2": "Khuzait",
-					"weight": 200
-				},
-				{
-					"fac1": "Aserai",
-					"fac2": "Aserai",
-					"weight": 200
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Vlandia",
-					"weight": 600
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Sturgia",
-					"weight": 200
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Battania",
-					"weight": 100
-				},
-				{
-					"fac1": "Vlandia",
-					"fac2": "Empire",
-					"weight": 500
-				},
-				{
-					"fac1": "Vlandia",
-					"fac2": "Vlandia",
-					"weight": 200
-				},
-				{
-					"fac1": "Vlandia",
-					"fac2": "Khuzait",
-					"weight": 200
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Khuzait",
-					"weight": 300
-				},
-				{
-					"fac1": "Aserai",
-					"fac2": "Khuzait",
-					"weight": 350
-				},
-				{
-					"fac1": "Battania",
-					"fac2": "Vlandia",
-					"weight": 100
-				},
-				{
-					"fac1": "Aserai",
-					"fac2": "Empire",
-					"weight": 100
-				},
-				{
-					"fac1": "Battania",
-					"fac2": "Battania",
-					"weight": 200
-				},
-				{
-					"fac1": "Empire",
-					"fac2": "Empire",
-					"weight": 200
-				},
-				{
-					"fac1": "Sturgia",
-					"fac2": "Aserai",
-					"weight": 100
-				},
-				{
-					"fac1": "Aserai",
-					"fac2": "Vlandia",
-					"weight": 100
-				}
-			},
-			"Town outskirts": {
+			],
+			"Trading post": [
 				{
 					"fac1": "Empire",
 					"fac2": "Khuzait",
@@ -688,8 +586,115 @@
 					"fac2": "Vlandia",
 					"weight": 100
 				}
-			},
-			"Port Omor": {
+			],
+			"Town outskirts": [
+				{
+					"fac1": "Empire",
+					"fac2": "Khuzait",
+					"weight": 600
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Khuzait",
+					"weight": 600
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Empire",
+					"weight": 400
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Aserai",
+					"weight": 600
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Empire",
+					"weight": 150
+				},
+				{
+					"fac1": "Khuzait",
+					"fac2": "Khuzait",
+					"weight": 200
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Aserai",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Vlandia",
+					"weight": 600
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Sturgia",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Battania",
+					"weight": 100
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Empire",
+					"weight": 500
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Vlandia",
+					"weight": 200
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Khuzait",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Khuzait",
+					"weight": 300
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Khuzait",
+					"weight": 350
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Vlandia",
+					"weight": 100
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Empire",
+					"weight": 100
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Battania",
+					"weight": 200
+				},
+				{
+					"fac1": "Empire",
+					"fac2": "Empire",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Aserai",
+					"weight": 100
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Vlandia",
+					"weight": 100
+				}
+			],
+			"Port Omor": [
 				{
 					"fac1": "Empire",
 					"fac2": "Khuzait",
@@ -795,7 +800,7 @@
 					"fac2": "Vlandia",
 					"weight": 250
 				}
-			}
+			]
 		}
 	}
 }
