@@ -16,19 +16,20 @@ class ClassesConfig(BaseModel):
 
 class MapModel(BaseModel):
     name: str
-    type: str
+    type: MapType
+
 
 class MatchupModel(BaseModel):
     fac1: str
     fac2: str
     weight: int
 
+
 class MatchupConfig(BaseModel):
     maps: list[MapModel]
     factions: list[str]
     matchup_weights: dict[str, list[MatchupModel]]
     matchup_weight_defaults: dict[MapType, list[MatchupModel]]
-    pass
 
 
 class BalanceConfig(BaseModel):
@@ -36,7 +37,6 @@ class BalanceConfig(BaseModel):
     open_map_max_arch: int
     close_map_max_cav: int
     close_map_max_arch: int
-    pass
 
 
 class MatchmakingConfig(BaseModel):
