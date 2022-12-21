@@ -19,6 +19,10 @@ httpx = "^0.23.1"
 pytest = "^7.2.0"
 mypy = "^0.991"
 
+[tool.poe.tasks]
+test = "python -m pytest -v"
+run = "python src/main.py"
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 
