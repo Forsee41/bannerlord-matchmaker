@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from functools import cached_property
-from matchmaker.matchups.faction import Faction
+from matchmaking_config import Faction
 
-from matchmaker.matchups.map import Map
-from matchmaking_config import config
+from matchmaking_config import config, Map
 from enums import MapType
 
 

@@ -1,18 +1,17 @@
 import random
-from matchmaker.matchups.faction import Faction
 
-from matchmaking_config import MatchupModel, config, MapModel
+from matchmaking_config import MatchupModel, config, Map, Faction
 
 
 class MatchupPicker:
     @staticmethod
-    def choose_map() -> MapModel:
+    def choose_map() -> Map:
         maplist = config.matchups.maps
         chosen_map = random.choice(maplist)
         return chosen_map
 
     @classmethod
-    def choose_factions(cls, map: MapModel) -> tuple[Faction, Faction]:
+    def choose_factions(cls, map: Map) -> tuple[Faction, Faction]:
         matchup = cls._choose_matchup(map)
         return Faction(matchup.fac1), Faction(matchup.fac2)
 
@@ -22,7 +21,7 @@ class MatchupPicker:
         return matchups, weights
 
     @classmethod
-    def _choose_matchup(cls, map: MapModel) -> MatchupModel:
+    def _choose_matchup(cls, map: Map) -> MatchupModel:
         if map.name in config.matchups.matchup_weights:
             matchup_list = config.matchups.matchup_weights[map.name]
         else:
