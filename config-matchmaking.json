@@ -10,35 +10,43 @@
 		"maps": [
 			{
 			"name": "Echerion",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Trading post",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Xauna",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Town outskirts",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Port Omor",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Sharis",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Urikskalaar",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			},
 			{
 			"name": "Zendyar",
-			"type": "open"
+			"type": "open",
+			"weight": 100
 			}
 		],
 		"factions": [

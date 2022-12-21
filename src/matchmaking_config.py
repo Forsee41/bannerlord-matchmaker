@@ -17,6 +17,7 @@ class ClassesConfig(BaseModel):
 class Map(BaseModel):
     name: str
     type: MapType
+    weight: int
 
 class Faction(str):
     pass
