@@ -1,6 +1,6 @@
 import random
 
-from matchmaking_config import MatchupModel, config, Map
+from matchmaking_config import Matchup, config, Map
 
 
 class MatchupPicker:
@@ -12,7 +12,7 @@ class MatchupPicker:
         return chosen_map
 
     @classmethod
-    def choose_matchup(cls, map: Map) -> MatchupModel:
+    def choose_matchup(cls, map: Map) -> Matchup:
         if map.name in config.matchups.matchup_weights:
             matchup_list = config.matchups.matchup_weights[map.name]
         else:

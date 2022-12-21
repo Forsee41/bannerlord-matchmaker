@@ -23,7 +23,7 @@ class Faction(str):
     pass
 
 
-class MatchupModel(BaseModel):
+class Matchup(BaseModel):
     fac1: Faction
     fac2: Faction
     weight: int
@@ -32,8 +32,8 @@ class MatchupModel(BaseModel):
 class MatchupConfig(BaseModel):
     maps: list[Map]
     factions: list[str]
-    matchup_weights: dict[str, list[MatchupModel]]
-    matchup_weight_defaults: dict[MapType, list[MatchupModel]]
+    matchup_weights: dict[str, list[Matchup]]
+    matchup_weight_defaults: dict[MapType, list[Matchup]]
 
 
 class BalanceConfig(BaseModel):

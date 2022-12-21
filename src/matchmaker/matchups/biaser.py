@@ -1,4 +1,4 @@
-from matchmaking_config import Map, MatchupModel
+from matchmaking_config import Map, Matchup
 
 
 class MatchupBiaser:
@@ -13,7 +13,7 @@ class MatchupBiaser:
         return maplist
 
     @staticmethod
-    def bias_matchups(matchups: list[MatchupModel]) -> list[MatchupModel]:
+    def bias_matchups(matchups: list[Matchup]) -> list[Matchup]:
         """
         Takes a list of matchups, changes their weights according
         to bias and returns them
