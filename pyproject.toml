@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Matchmaker service for Bannerlord Matchmaking system"
 authors = ["Forsee41 <forsee41@gmail.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -20,16 +20,16 @@ pytest = "^7.2.0"
 mypy = "^0.991"
 
 [tool.pytest.ini_options]
-pythonpath = ["app"]
+pythonpath = ["src"]
 
 [tool.pyright]
-executionEnvironments = [{ root = "tests", extraPaths = ["app"]}]
+executionEnvironments = [{ root = "tests", extraPaths = ["src"]}]
 
 [tool.black]
 line-length = 88
 
 [mypy]
-mypy_path = "app"
+mypy_path = "src"
 
 [build-system]
 requires = ["poetry-core"]

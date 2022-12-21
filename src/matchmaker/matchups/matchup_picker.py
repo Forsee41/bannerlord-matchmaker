@@ -1,5 +1,5 @@
 import random
-from app.matchmaker.matchups.faction import Faction
+from matchmaker.matchups.faction import Faction
 
 from matchmaking_config import MatchupModel, config, MapModel
 

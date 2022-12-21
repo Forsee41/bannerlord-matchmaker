@@ -32,7 +32,7 @@ Setup process for local testing, api docs checking, development etc.
 1. Install dev dependencies if needed `poetry install --with dev`
 1. Set all required environment variables. Check `EnvVarNames` enum inside `enums.py` for the list of required variables
 1. Activate poetry venv `poetry shell`
-1. Run locally via `python app/main.py` from inside the project's root
+1. Run locally via `python src/main.py` from inside the project's root
 
 ## Development and testing
 

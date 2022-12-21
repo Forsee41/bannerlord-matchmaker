@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.matchmaker.matchups.faction import Faction
+from matchmaker.matchups.faction import Faction
 from enums import MapType
 
 
