@@ -4,20 +4,20 @@ from pydantic import BaseModel
 
 from config import env_config
 from helpers import get_config_from_json
-from enums import MapType
+from enums import MapType as MapTypeEnum
 
 
 log = logging.getLogger(__name__)
 
 
-class ClassesConfig(BaseModel):
-    pass
+class ClassLimitations(BaseModel):
+    max_cav: int
+    max_arch: int
+    max_inf: int
+    min_cav: int
+    min_arch: int
+    min_inf: int
 
-
-class Map(BaseModel):
-    name: str
-    type: MapType
-    weight: int
 
 class Faction(str):
     pass
@@ -29,24 +29,22 @@ class Matchup(BaseModel):
     weight: int
 
 
-class MatchupConfig(BaseModel):
-    maps: list[Map]
-    factions: list[str]
-    matchup_weights: dict[str, list[Matchup]]
-    matchup_weight_defaults: dict[MapType, list[Matchup]]
+class MapType(BaseModel):
+    matchups: list[Matchup]
+    class_limitations: ClassLimitations
 
-
-class BalanceConfig(BaseModel):
-    open_map_max_cav: int
-    open_map_max_arch: int
-    close_map_max_cav: int
-    close_map_max_arch: int
+class Map(BaseModel):
+    name: str
+    type: MapTypeEnum
+    weight: int
+    class_limitations: ClassLimitations | None = None
+    matchups: list[Matchup] | None = None
 
 
 class MatchmakingConfig(BaseModel):
-    classes: ClassesConfig
-    matchups: MatchupConfig
-    balance: BalanceConfig
+    map_types: dict[MapTypeEnum, MapType]
+    maps: list[Map]
+    factions: list[Faction]
 
 
 class MatchmakingConfigHandler:
@@ -66,9 +64,9 @@ class MatchmakingConfigHandler:
         new_conf = config.copy(update=data)
         # changing an existing mutable object will allow to dynamically
         # change the config in a runtime since no new objects are created
-        config.classes = new_conf.classes
-        config.matchups = new_conf.matchups
-        config.balance = new_conf.balance
+        config.map_types = new_conf.map_types
+        config.maps = new_conf.maps
+        config.factions = new_conf.factions
 
 
 config = MatchmakingConfigHandler.generate_from_local_file()

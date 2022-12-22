@@ -1,13 +1,14 @@
 import random
 
-from matchmaking_config import Matchup, Map, MatchupConfig
+from matchmaking_config import Matchup, Map, MatchmakingConfig
 
 
 class MatchupRandomPicker:
     """
     Containing methods to randomly choose maps and matchups using their weights
     """
-    def __init__(self, matchup_config: MatchupConfig) -> None:
+
+    def __init__(self, matchup_config: MatchmakingConfig) -> None:
         self.mm_config = matchup_config
 
     @staticmethod
@@ -28,10 +29,11 @@ class MatchupRandomPicker:
 
     def get_raw_map_matchups(self, map: Map) -> list[Matchup]:
         """
-        Exctacting a list of matchups for a chosen map from a mm config
+        Exctracting a list of matchups for a chosen map from a mm config
         """
-        if map.name in self.mm_config.matchup_weights:
-            matchup_list = self.mm_config.matchup_weights[map.name]
+        if map.matchups is not None:
+            matchup_list = map.matchups
         else:
-            matchup_list = self.mm_config.matchup_weight_defaults[map.type]
+            matchup_list = self.mm_config.map_types[map.type].matchups
+
         return matchup_list
