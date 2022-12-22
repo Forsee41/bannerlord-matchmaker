@@ -8,9 +8,6 @@ class MatchupRandomPicker:
     Containing methods to randomly choose maps and matchups using their weights
     """
 
-    def __init__(self, matchup_config: MatchmakingConfig) -> None:
-        self.mm_config = matchup_config
-
     @staticmethod
     def choose_map(maplist: list[Map]) -> Map:
         """Randomly chooses a map using a list of maps, respecting their weights"""
@@ -27,7 +24,14 @@ class MatchupRandomPicker:
         matchup = random.choices(population=matchup_list, weights=weights, k=1)[0]
         return matchup
 
-    def get_raw_map_matchups(self, map: Map) -> list[Matchup]:
+
+class MatchupConfigRetriever:
+    """Retrieves matchups from a config"""
+
+    def __init__(self, matchup_config: MatchmakingConfig) -> None:
+        self.mm_config = matchup_config
+
+    def get_matchups_for_map(self, map: Map) -> list[Matchup]:
         """
         Exctracting a list of matchups for a chosen map from a mm config
         """
