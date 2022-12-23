@@ -45,3 +45,4 @@ class MapFacFieldNames(str, Enum):
 class MapType(str, Enum):
     open = "open"
     close = "close"
+    mix = "mix"

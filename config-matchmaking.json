@@ -8,6 +8,123 @@
 		"Khuzait"
 	],
 	"map_types": {
+		"mix": {
+			"class_limitations": {
+				"max_cav": 2,
+				"max_arch": 2,
+				"max_inf": 6,
+				"min_cav": 0,
+				"min_arch": 0,
+				"min_inf": 2
+			},
+			"matchups": [
+				{
+					"fac1": "Empire",
+					"fac2": "Khuzait",
+					"weight": 600
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Khuzait",
+					"weight": 600
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Empire",
+					"weight": 400
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Aserai",
+					"weight": 600
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Empire",
+					"weight": 150
+				},
+				{
+					"fac1": "Khuzait",
+					"fac2": "Khuzait",
+					"weight": 200
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Aserai",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Vlandia",
+					"weight": 600
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Sturgia",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Battania",
+					"weight": 100
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Empire",
+					"weight": 500
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Vlandia",
+					"weight": 200
+				},
+				{
+					"fac1": "Vlandia",
+					"fac2": "Khuzait",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Khuzait",
+					"weight": 300
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Khuzait",
+					"weight": 350
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Vlandia",
+					"weight": 100
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Empire",
+					"weight": 100
+				},
+				{
+					"fac1": "Battania",
+					"fac2": "Battania",
+					"weight": 200
+				},
+				{
+					"fac1": "Empire",
+					"fac2": "Empire",
+					"weight": 200
+				},
+				{
+					"fac1": "Sturgia",
+					"fac2": "Aserai",
+					"weight": 100
+				},
+				{
+					"fac1": "Aserai",
+					"fac2": "Vlandia",
+					"weight": 100
+				}
+			]
+		},
 		"open": {
 			"class_limitations": {
 				"max_cav": 2,
@@ -246,7 +363,7 @@
 	"maps": [
 		{
 			"name": "Xauna",
-			"type": "open",
+			"type": "close",
 			"weight": 100,
 			"class_limitations": {
 				"max_cav": 2,
@@ -366,7 +483,7 @@
 		},
 		{
 			"name": "Echerion",
-			"type": "open",
+			"type": "mix",
 			"weight": 100,
 			"matchups": [
 				{
@@ -702,7 +819,7 @@
 		},
 		{
 			"name": "Sharis",
-			"type": "open",
+			"type": "mix",
 			"weight": 100
 		},
 		{
@@ -712,12 +829,12 @@
 		},
 		{
 			"name": "Zendyar",
-			"type": "open",
+			"type": "mix",
 			"weight": 100
 		},
 		{
 			"name": "Port Omor",
-			"type": "open",
+			"type": "close",
 			"weight": 100,
 			"matchups": [
 				{
