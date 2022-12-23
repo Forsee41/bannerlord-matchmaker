@@ -1,6 +1,5 @@
 from api.schema import PlayerModel, PlayerReponseModel
 from matchmaker.player import Player
-from matchmaking_config import config
 
 
 class PlayerConverter:
