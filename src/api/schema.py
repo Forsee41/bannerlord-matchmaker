@@ -1,14 +1,14 @@
 from pydantic import BaseModel, Field
 
 from matchmaking_config import MatchmakingConfig as MMConfig
-from enums import PlayerClass
+from enums import PlayerRole
 
 
 class PlayerModel(BaseModel):
     id: str
     mmr: int
-    main: PlayerClass = Field(alias="mainClass")
-    secondary: PlayerClass = Field(alias="secondaryClass")
+    main: PlayerRole = Field(alias="mainClass")
+    secondary: PlayerRole = Field(alias="secondaryClass")
     nickname: str
     discord_id: str = Field(alias="discordId")
     clan: str

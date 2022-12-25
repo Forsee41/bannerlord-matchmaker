@@ -2,7 +2,7 @@ import logging
 from functools import total_ordering
 
 from exceptions import RoleNotFoundError, ProficiencyValidationError
-from enums import PlayerClass, Proficiency
+from enums import PlayerRole, Proficiency
 
 
 log = logging.getLogger(__name__)
@@ -11,9 +11,9 @@ log = logging.getLogger(__name__)
 class ClassProficiency(dict):
     def __init__(self, cav: Proficiency, arch: Proficiency, inf: Proficiency):
         super().__init__()
-        self[PlayerClass.cav] = cav
-        self[PlayerClass.arch] = arch
-        self[PlayerClass.inf] = inf
+        self[PlayerRole.cav] = cav
+        self[PlayerRole.arch] = arch
+        self[PlayerRole.inf] = inf
         self._validate_input()
 
     def _validate_input(self) -> None:
@@ -70,18 +70,18 @@ class Player:
         return self.mmr_raw if self.current_class == self.main else self.mmr_reduced
 
     @property
-    def main(self) -> PlayerClass:
+    def main(self) -> PlayerRole:
         return self._find_role_by_proficiency(Proficiency.main)
 
     @property
-    def second(self) -> PlayerClass | None:
+    def second(self) -> PlayerRole | None:
         try:
             return self._find_role_by_proficiency(Proficiency.second)
         except RoleNotFoundError:
             return None
 
     @property
-    def alt_class(self) -> PlayerClass:
+    def alt_class(self) -> PlayerRole:
         try:
             return self._find_role_by_proficiency(Proficiency.second)
         except RoleNotFoundError:
@@ -89,11 +89,11 @@ class Player:
         return self._find_role_by_proficiency(Proficiency.flex)
 
     @property
-    def flexes(self) -> list[PlayerClass]:
+    def flexes(self) -> list[PlayerRole]:
         return self._find_roles_by_proficiency(Proficiency.flex)
 
     @property
-    def prof_roles(self) -> list[PlayerClass]:
+    def prof_roles(self) -> list[PlayerRole]:
         result = self.flexes
         result.append(self.main)
         return result
@@ -118,14 +118,14 @@ class Player:
     def __lt__(self, other) -> bool:
         return self.mmr < other.mmr
 
-    def _find_role_by_proficiency(self, proficiency: Proficiency) -> PlayerClass:
+    def _find_role_by_proficiency(self, proficiency: Proficiency) -> PlayerRole:
         all_matching_roles = self._find_roles_by_proficiency(proficiency)
         try:
             return all_matching_roles[0]
         except IndexError:
             raise RoleNotFoundError
 
-    def _find_roles_by_proficiency(self, proficiency: Proficiency) -> list[PlayerClass]:
+    def _find_roles_by_proficiency(self, proficiency: Proficiency) -> list[PlayerRole]:
         result = []
         for game_class in self._class_proficiency:
             if self._class_proficiency[game_class] == proficiency:

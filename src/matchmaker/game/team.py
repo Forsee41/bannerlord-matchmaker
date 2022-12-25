@@ -1,5 +1,5 @@
 from matchmaker.player import Player
-from enums import PlayerClass
+from enums import PlayerRole
 
 
 class Team(list):
@@ -21,19 +21,19 @@ class Team(list):
 
     @property
     def total_cav(self) -> int:
-        return self._count_players_by_class(PlayerClass.cav)
+        return self._count_players_by_class(PlayerRole.cav)
 
     @property
     def total_inf(self) -> int:
-        return self._count_players_by_class(PlayerClass.inf)
+        return self._count_players_by_class(PlayerRole.inf)
 
     @property
     def total_arch(self) -> int:
-        return self._count_players_by_class(PlayerClass.arch)
+        return self._count_players_by_class(PlayerRole.arch)
 
     @property
     def has_igl(self) -> bool:
         return any([player.igl for player in self])
 
-    def _count_players_by_class(self, target_class: PlayerClass) -> int:
+    def _count_players_by_class(self, target_class: PlayerRole) -> int:
         return len(list(filter((lambda p: p.current_class == target_class), self)))

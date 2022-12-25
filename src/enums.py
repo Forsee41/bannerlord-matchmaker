@@ -18,7 +18,7 @@ class Environments(str, Enum):
     PROD = "prod"
 
 
-class PlayerClass(str, Enum):
+class PlayerRole(str, Enum):
     cav = "Cavalry"
     inf = "Infantry"
     arch = "Archer"
