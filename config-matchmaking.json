@@ -1,4 +1,52 @@
 {
+	"roles": {
+		"swap_priority": [
+			{
+				"from_role": "Offclass",
+				"to_role": "Main"
+			},
+			{
+				"from_role": "Offclass",
+				"to_role": "Flex"
+			},
+			{
+				"from_role": "Offclass",
+				"to_role": "Secondary"
+			},
+			{
+				"from_role": "Secondary",
+				"to_role": "Main"
+			},
+			{
+				"from_role": "Flex",
+				"to_role": "Main"
+			},
+			{
+				"from_role": "Flex",
+				"to_role": "Flex"
+			},
+			{
+				"from_role": "Main",
+				"to_role": "Flex"
+			},
+			{
+				"from_role": "Main",
+				"to_role": "Secondary"
+			},
+			{
+				"from_role": "Secondary",
+				"to_role": "Offclass"
+			},
+			{
+				"from_role": "Flex",
+				"to_role": "Offclass"
+			},
+			{
+				"from_role": "Main",
+				"to_role": "Offclass"
+			}
+		]
+	},
 	"factions": [
 		"Sturgia",
 		"Battania",

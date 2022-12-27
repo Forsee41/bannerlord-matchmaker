@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from config import env_config
 from helpers import get_config_from_json
-from enums import MapType as MapTypeEnum
+from enums import MapType as MapTypeEnum, PlayerRole, Proficiency
 
 
 log = logging.getLogger(__name__)
@@ -33,6 +33,7 @@ class MapType(BaseModel):
     matchups: list[Matchup]
     class_limitations: ClassLimitations
 
+
 class Map(BaseModel):
     name: str
     type: MapTypeEnum
@@ -41,10 +42,20 @@ class Map(BaseModel):
     matchups: list[Matchup] | None = None
 
 
+class SwapCategory(BaseModel):
+    from_role: Proficiency
+    to_role: Proficiency
+
+
+class Roles(BaseModel):
+    swap_priority: list[SwapCategory]
+
+
 class MatchmakingConfig(BaseModel):
     map_types: dict[MapTypeEnum, MapType]
     maps: list[Map]
     factions: list[Faction]
+    roles: Roles
 
 
 class MatchmakingConfigHandler:

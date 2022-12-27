@@ -55,11 +55,14 @@ class Player:
         self.igl = igl
         self.mmr_raw = mmr
         self._class_proficiency = class_proficiency
-        self.current_class = self.main
+        self.current_role = self.main
+
+    def get_role_proficiency(self, role: PlayerRole):
+        return self._class_proficiency[role]
 
     @property
     def is_offclass(self) -> bool:
-        return self.main != self.current_class
+        return self.main != self.current_role
 
     @property
     def mmr_reduced(self) -> int:
@@ -67,7 +70,7 @@ class Player:
 
     @property
     def mmr(self) -> int:
-        return self.mmr_raw if self.current_class == self.main else self.mmr_reduced
+        return self.mmr_raw if self.current_role == self.main else self.mmr_reduced
 
     @property
     def main(self) -> PlayerRole:
@@ -77,6 +80,13 @@ class Player:
     def second(self) -> PlayerRole | None:
         try:
             return self._find_role_by_proficiency(Proficiency.second)
+        except RoleNotFoundError:
+            return None
+
+    @property
+    def offclass(self) -> PlayerRole | None:
+        try:
+            return self._find_role_by_proficiency(Proficiency.offclass)
         except RoleNotFoundError:
             return None
 
@@ -102,7 +112,7 @@ class Player:
         result = {}
         result.update(self._export_data)
         result["nickname"] = self.nickname
-        result["current_class"] = self.current_class
+        result["current_class"] = self.current_role
         result["igl"] = self.igl
         result["mmr_raw"] = self.mmr_raw
         result["mmr_reduced"] = self.mmr_reduced
@@ -110,7 +120,7 @@ class Player:
         return result
 
     def __post_init__(self) -> None:
-        self.current_class = self.main
+        self.current_role = self.main
 
     def __eq__(self, other) -> bool:
         return self.mmr == other.mmr

@@ -1,12 +1,57 @@
 from enum import Enum
+from typing import NamedTuple
 from matchmaker.player import Player
 from enums import PlayerRole
-from src.matchmaking_config import ClassLimitations
+from src.matchmaking_config import ClassLimitations, SwapCategory
+
+
+class PlayerRoleSwappingOrder(NamedTuple):
+    from_role: list[Player]
+    to_role: list[Player]
 
 
 class RolePicker:
-    def __init__(self, players: list[Player]) -> None:
+    def __init__(
+        self, players: list[Player], swap_priority: list[SwapCategory]
+    ) -> None:
         self.players = players
+        self.swap_priority = swap_priority
+
+    def get_mains(self, role: PlayerRole) -> list[Player]:
+        return list([player for player in self.players if player.main == role])
+
+    def get_flexes(self, role: PlayerRole) -> list[Player]:
+        return list([player for player in self.players if role in player.flexes])
+
+    def get_secondaries(self, role: PlayerRole) -> list[Player]:
+        return list([player for player in self.players if player.second == role])
+
+    def get_offclassers(self, role: PlayerRole) -> list[Player]:
+        return list([player for player in self.players if player.offclass == role])
+
+    def _find_best_role_replacements(
+        self, from_role: PlayerRole, to_role: PlayerRole, amount: int
+    ) -> list[Player]:
+        players_to_swap: list[Player] = []
+        considered_players = list(
+            [player for player in self.players if player.current_role == from_role]
+        )
+        for swap_category in self.swap_priority:
+            swap_category_matching_players = list(
+                [
+                    player
+                    for player 
+                    in considered_players
+                    if player.get_role_proficiency(from_role) == swap_category.from_role
+                    and player.get_role_proficiency(to_role) == swap_category.to_role
+                ]
+            )
+            swap_category_matching_players.sort(reverse=True)
+            for player in swap_category_matching_players:
+                players_to_swap.append(player)
+                if len(players_to_swap) == amount:
+                    return players_to_swap
+        return players_to_swap
 
 
 class RolePickerRule:
@@ -16,7 +61,7 @@ class RolePickerRule:
 
     def _count_role_players(self, players: list[Player]) -> int:
         current_role_players = [
-            player for player in players if player.current_class == self.role
+            player for player in players if player.current_role == self.role
         ]
         return len(current_role_players)
 
