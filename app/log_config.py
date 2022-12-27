@@ -5,8 +5,8 @@ from pathlib import Path
 
 import yaml
 
-from exceptions import ConfigError
-from enums import EnvVarNames
+from app.exceptions import ConfigError
+from app.enums import EnvVarNames
 
 
 DEFAULT_LOG_CONFIG_PATH = "logging.yaml"

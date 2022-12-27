@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import logging
-from config import main_service_config
+
+from app.config import main_service_config
 from . import routes
 
 

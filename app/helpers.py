@@ -6,8 +6,8 @@ import json
 
 import yaml
 
-from exceptions import ConfigError
-from enums import EnvVarNames
+from app.exceptions import ConfigError
+from app.enums import EnvVarNames
 
 
 log = logging.getLogger(__name__)

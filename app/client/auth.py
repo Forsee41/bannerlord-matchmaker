@@ -3,8 +3,8 @@ import os
 from dataclasses import dataclass
 
 
-from config import main_service_config
-from enums import EnvVarNames
+from app.config import main_service_config
+from app.enums import EnvVarNames
 
 
 log = logging.getLogger(__name__)

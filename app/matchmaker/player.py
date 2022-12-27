@@ -1,8 +1,8 @@
 import logging
 from functools import total_ordering
 
-from exceptions import RoleNotFoundError, ProficiencyValidationError
-from enums import PlayerRole, Proficiency
+from app.exceptions import RoleNotFoundError, ProficiencyValidationError
+from app.enums import PlayerRole, Proficiency
 
 
 log = logging.getLogger(__name__)

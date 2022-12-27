@@ -2,9 +2,9 @@ import logging
 
 from pydantic import BaseModel
 
-from config import env_config
-from helpers import get_config_from_json
-from enums import MapType as MapTypeEnum, PlayerRole, Proficiency
+from app.config import env_config
+from app.helpers import get_config_from_json
+from app.enums import MapType as MapTypeEnum, PlayerRole, Proficiency
 
 
 log = logging.getLogger(__name__)

@@ -1,5 +1,5 @@
-from matchmaker.player import Player
-from enums import PlayerRole
+from app.matchmaker.player import Player
+from app.enums import PlayerRole
 
 
 class Team(list):

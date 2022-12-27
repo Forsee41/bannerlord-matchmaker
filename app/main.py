@@ -1,7 +1,7 @@
 import uvicorn
 
-from api.app_builder import create_app
-from log_config import setup_loggers
+from app.api.app_builder import create_app
+from app.log_config import setup_loggers
 
 
 __VERSION__ = "0.1.0"

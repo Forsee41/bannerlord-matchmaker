@@ -1,6 +1,6 @@
 from typing import Any, Protocol
 
-from matchmaker.player import Player
+from app.matchmaker.player import Player
 
 
 class PlayerConverterProtocol(Protocol):

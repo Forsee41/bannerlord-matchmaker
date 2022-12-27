@@ -3,7 +3,7 @@ import logging
 
 from pydantic import BaseModel, validator
 
-from helpers import get_config_from_yaml, get_app_config_file_path
+from app.helpers import get_config_from_yaml, get_app_config_file_path
 
 
 log = logging.getLogger(__name__)

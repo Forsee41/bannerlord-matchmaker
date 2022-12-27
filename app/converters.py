@@ -1,5 +1,5 @@
-from api.schema import PlayerModel, PlayerReponseModel
-from matchmaker.player import Player
+from app.api.schema import PlayerModel, PlayerReponseModel
+from app.matchmaker.player import Player
 
 
 class PlayerConverter:

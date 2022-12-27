@@ -1,8 +1,8 @@
 import pytest
 from enums import MapType
 
-from matchmaker.matchups.matchup_picker import MatchupConfigRetriever, MatchupRandomPicker
-from matchmaking_config import Map, Matchup, config
+from app.matchmaker.matchups.matchup_picker import MatchupConfigRetriever, MatchupRandomPicker
+from app.matchmaking_config import Map, Matchup, config
 
 
 class TestMatchupRandomPicker:

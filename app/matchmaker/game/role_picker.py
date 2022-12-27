@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import NamedTuple
-from matchmaker.player import Player
-from enums import PlayerRole
-from src.matchmaking_config import ClassLimitations, SwapCategory
+
+from app.matchmaker.player import Player
+from app.enums import PlayerRole
+from app.matchmaking_config import ClassLimitations, SwapCategory
 
 
 class PlayerRoleSwappingOrder(NamedTuple):

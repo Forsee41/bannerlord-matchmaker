@@ -1,4 +1,4 @@
-from matchmaking_config import Map, Matchup
+from app.matchmaking_config import Map, Matchup
 
 
 class MatchupBiaser:
