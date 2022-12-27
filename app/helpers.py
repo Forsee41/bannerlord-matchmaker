@@ -67,3 +67,27 @@ def get_app_config_file_path() -> Path:
         raise ValueError(error_msg)
 
     return target_path
+
+
+def get_env_mm_config_file_path() -> Path:
+    """
+    Returns matchmaking config file path as a Path object
+    Gets file path from env variable, if env variable is not set,
+    uses filepath from app config instead
+    """
+    env_config_file_path = os.getenv(EnvVarNames.MM_CONFIG_FILE_PATH, None)
+    if env_config_file_path is None:
+        log.warning(
+            f"Couldn't load {EnvVarNames.CONFIG_FILE_PATH} env var,"
+            f"trying config path from app config"
+        )
+    if env_config_file_path is None:
+        raise EnvironmentError("MM config filepath env var is not set")
+    try:
+        target_path = Path(env_config_file_path)
+    except Exception:
+        error_msg = f"Config file path is invalid"
+        log.error(error_msg)
+        raise ValueError(error_msg)
+
+    return target_path

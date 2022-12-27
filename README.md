@@ -55,4 +55,5 @@ in `pyproject.toml`
 1. `black` for code formatting
 1. `pytest` for testing
 1. `poetry` as a package and environment manager
+1. `debugpy` as a debugger engine
 1. `docker` for an image building and deployment

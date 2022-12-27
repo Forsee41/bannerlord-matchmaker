@@ -3,7 +3,7 @@ import logging
 from pydantic import BaseModel
 
 from app.config import env_config
-from app.helpers import get_config_from_json
+from app.helpers import get_config_from_json, get_env_mm_config_file_path
 from app.enums import MapType as MapTypeEnum, PlayerRole, Proficiency
 
 
@@ -61,7 +61,10 @@ class MatchmakingConfig(BaseModel):
 class MatchmakingConfigHandler:
     @classmethod
     def generate_from_local_file(cls) -> MatchmakingConfig:
-        config_path = env_config.local_mm_config_path
+        try:
+            config_path = get_env_mm_config_file_path()
+        except EnvironmentError:
+            config_path = env_config.local_mm_config_path
         config_dict = get_config_from_json(config_path)
         return MatchmakingConfig.parse_obj(config_dict)
 

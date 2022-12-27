@@ -1,6 +1,6 @@
 import pytest
-from enums import MapType
 
+from app.enums import MapType
 from app.matchmaker.matchups.matchup_picker import MatchupConfigRetriever, MatchupRandomPicker
 from app.matchmaking_config import Map, Matchup, config
 
@@ -78,3 +78,6 @@ class TestMatchupConfigRetriever:
         result_matchups = config_retriever.get_matchups_for_map(map=map)
         assert result_matchups == expected_matchups
 
+
+if __name__ == "__main__":
+   pytest.main() 
