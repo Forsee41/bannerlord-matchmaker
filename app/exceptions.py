@@ -26,6 +26,7 @@ class ProficiencyValidationError(LoggedException):
     """An error raised on trying to initialize
     PlayerClassProficiency with invalid data"""
 
+
 class NotEnoughPlayersError(LoggedException):
     """
     An error raised when player picker recieved less than 12 players

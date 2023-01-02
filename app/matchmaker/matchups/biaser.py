@@ -19,4 +19,3 @@ class MatchupBiaser:
         to bias and returns them
         """
         return matchups
-

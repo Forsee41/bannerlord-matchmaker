@@ -40,7 +40,8 @@ def get_config_from_yaml(config_file_path: Path) -> dict[str, Any]:
     except Exception as e:
         raise ConfigError(
             "Error loading config file, perhaps config path is invalid or "
-            "data is corrupted", e
+            "data is corrupted",
+            e,
         )
 
     return config_dict

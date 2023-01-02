@@ -50,7 +50,6 @@ class SwapCategory(BaseModel):
     desc_mmr_sort: bool
 
 
-
 class Roles(BaseModel):
     swap_priority: list[SwapCategory]
 
