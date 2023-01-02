@@ -8,7 +8,7 @@ from app.enums import PlayerRole, Proficiency
 log = logging.getLogger(__name__)
 
 
-class ClassProficiency(dict):
+class RoleProficiency(dict):
     def __init__(self, cav: Proficiency, arch: Proficiency, inf: Proficiency):
         super().__init__()
         self[PlayerRole.cav] = cav
@@ -44,14 +44,12 @@ class ClassProficiency(dict):
 class Player:
     def __init__(
         self,
-        export_data: dict,
-        nickname: str,
+        id: str,
         igl: bool,
         mmr: int,
-        class_proficiency: ClassProficiency,
+        class_proficiency: RoleProficiency,
     ) -> None:
-        self._export_data = export_data
-        self.nickname = nickname
+        self.nickname = id
         self.igl = igl
         self.mmr_raw = mmr
         self._class_proficiency = class_proficiency
@@ -110,7 +108,6 @@ class Player:
 
     def export_dict(self) -> dict:
         result = {}
-        result.update(self._export_data)
         result["nickname"] = self.nickname
         result["current_class"] = self.current_role
         result["igl"] = self.igl
