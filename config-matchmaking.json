@@ -3,47 +3,58 @@
 		"swap_priority": [
 			{
 				"from_role": "Offclass",
-				"to_role": "Main"
+				"to_role": "Main",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Offclass",
-				"to_role": "Flex"
+				"to_role": "Flex",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Offclass",
-				"to_role": "Secondary"
+				"to_role": "Secondary",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Secondary",
-				"to_role": "Main"
+				"to_role": "Main",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Flex",
-				"to_role": "Main"
+				"to_role": "Main",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Flex",
-				"to_role": "Flex"
+				"to_role": "Flex",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Main",
-				"to_role": "Flex"
+				"to_role": "Flex",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Main",
-				"to_role": "Secondary"
+				"to_role": "Secondary",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Secondary",
-				"to_role": "Offclass"
+				"to_role": "Offclass",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Flex",
-				"to_role": "Offclass"
+				"to_role": "Offclass",
+				"desc_mmr_sort": true
 			},
 			{
 				"from_role": "Main",
-				"to_role": "Offclass"
+				"to_role": "Offclass",
+				"desc_mmr_sort": true
 			}
 		]
 	},
@@ -63,7 +74,9 @@
 				"max_inf": 6,
 				"min_cav": 0,
 				"min_arch": 0,
-				"min_inf": 2
+				"min_inf": 2,
+				"fill_cav": false,
+				"fill_arch": false
 			},
 			"matchups": [
 				{
@@ -180,7 +193,9 @@
 				"max_inf": 6,
 				"min_cav": 0,
 				"min_arch": 0,
-				"min_inf": 2
+				"min_inf": 2,
+				"fill_cav": false,
+				"fill_arch": false
 			},
 			"matchups": [
 				{
@@ -297,7 +312,9 @@
 				"max_inf": 6,
 				"min_cav": 0,
 				"min_arch": 0,
-				"min_inf": 3
+				"min_inf": 3,
+				"fill_cav": false,
+				"fill_arch": false
 			},
 			"matchups": [
 				{
@@ -419,7 +436,9 @@
 				"max_inf": 6,
 				"min_cav": 0,
 				"min_arch": 0,
-				"min_inf": 3
+				"min_inf": 3,
+				"fill_cav": false,
+				"fill_arch": false
 			},
 			"matchups": [
 				{

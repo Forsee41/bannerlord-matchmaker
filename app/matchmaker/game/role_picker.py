@@ -1,4 +1,8 @@
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from enum import Enum
+from functools import total_ordering
 from typing import NamedTuple
 
 from app.matchmaker.player import Player
@@ -11,51 +15,59 @@ class PlayerRoleSwappingOrder(NamedTuple):
     to_role: list[Player]
 
 
-class RolePicker:
-    def __init__(
-        self, players: list[Player], swap_priority: list[SwapCategory]
-    ) -> None:
-        self.players = players
-        self.swap_priority = swap_priority
+class LimitationType(str, Enum):
+    max = "max"
+    min = "min"
 
-    def get_mains(self, role: PlayerRole) -> list[Player]:
-        return list([player for player in self.players if player.main == role])
 
-    def get_flexes(self, role: PlayerRole) -> list[Player]:
-        return list([player for player in self.players if role in player.flexes])
+@total_ordering
+@dataclass(order=False)
+class RoleSwap:
+    player: Player
+    to_role: PlayerRole
+    swap_priority: list[SwapCategory]
 
-    def get_secondaries(self, role: PlayerRole) -> list[Player]:
-        return list([player for player in self.players if player.second == role])
-
-    def get_offclassers(self, role: PlayerRole) -> list[Player]:
-        return list([player for player in self.players if player.offclass == role])
-
-    def _find_best_role_replacements(
-        self, from_role: PlayerRole, to_role: PlayerRole, amount: int
-    ) -> list[Player]:
-        players_to_swap: list[Player] = []
-        considered_players = list(
-            [player for player in self.players if player.current_role == from_role]
-        )
-        for swap_category in self.swap_priority:
-            swap_category_matching_players = list(
-                [
-                    player
-                    for player 
-                    in considered_players
-                    if player.get_role_proficiency(from_role) == swap_category.from_role
-                    and player.get_role_proficiency(to_role) == swap_category.to_role
-                ]
+    def __eq__(self, __o: RoleSwap) -> bool:
+        return all(
+            (
+                self.player.get_role_proficiency(self.player.current_role)
+                == __o.player.get_role_proficiency(self.player.current_role),
+                self.player.get_role_proficiency(self.to_role)
+                == __o.player.get_role_proficiency(self.to_role),
+                self.player.mmr == __o.player.mmr,
             )
-            swap_category_matching_players.sort(reverse=True)
-            for player in swap_category_matching_players:
-                players_to_swap.append(player)
-                if len(players_to_swap) == amount:
-                    return players_to_swap
-        return players_to_swap
+        )
+
+    def __gt__(self, __o: RoleSwap) -> bool:
+        for swap_category in self.swap_priority:
+            other_matching_category: bool = (
+                __o.player.current_role == swap_category.from_role
+                and __o.to_role == swap_category.to_role
+            )
+            self_matching_cagegory: bool = (
+                self.player.current_role == swap_category.from_role
+                and self.to_role == swap_category.to_role
+            )
+            if self_matching_cagegory and not other_matching_category:
+                return True
+            if other_matching_category and not self_matching_cagegory:
+                return False
+            if self_matching_cagegory and other_matching_category:
+                if swap_category.desc_mmr_sort:
+                    return self.player.mmr > __o.player.mmr
+                else:
+                    return self.player.mmr < __o.player.mmr
+
+        # there will always be at least 1 match in swap categories,
+        # but LSP is not happy about conditional returns,
+        # added bool return that will never be reached
+        return False
+
+    def apply(self) -> None:
+        self.player.current_role = self.to_role
 
 
-class RolePickerRule:
+class RolePickerRule(ABC):
     def __init__(self, role: PlayerRole, boundary_per_team: int) -> None:
         self.role = role
         self.boundary = boundary_per_team * 2
@@ -66,6 +78,251 @@ class RolePickerRule:
         ]
         return len(current_role_players)
 
+    @abstractmethod
+    def get_swaps_from_role_amount(self, players: list[Player]) -> int:
+        ...
+
+    @abstractmethod
+    def get_swaps_into_role_amount(self, players: list[Player]) -> int:
+        ...
+
+
+class RoleSwappingRules(dict):
+    def add_rule(
+        self, limit_type: LimitationType, role: PlayerRole, rule: RolePickerRule
+    ) -> None:
+        self[(limit_type, role)] = rule
+
+
+class RolePicker:
+
+    swapping_targets_map = {
+        PlayerRole.cav: [PlayerRole.inf, PlayerRole.arch],
+        PlayerRole.inf: [PlayerRole.cav, PlayerRole.arch],
+        PlayerRole.arch: [PlayerRole.inf, PlayerRole.cav],
+    }
+
+    def __init__(
+        self,
+        players: list[Player],
+        swap_priority: list[SwapCategory],
+        rules: RoleSwappingRules,
+        fill_cav: bool,
+        fill_arch: bool,
+    ) -> None:
+        self.players = players
+        self.swap_priority = swap_priority
+        self.fill_cav = fill_cav
+        self.fill_arch = fill_arch
+        self.rules = rules
+
+    def set_player_roles(self) -> list[Player]:
+        self._manage_role(PlayerRole.cav)
+        self._manage_role(PlayerRole.arch)
+        self._manage_cav_fills()
+        self._manage_arch_fills()
+        self._manage_repeated_cav_arch_swaps()
+        return self.players
+
+    def _manage_cav_fills(self):
+        max_limit_rule = self.rules[LimitationType.max, PlayerRole.cav]
+        min_limit_rule = self.rules[LimitationType.min, PlayerRole.cav]
+
+        if max_limit_rule.check_players(self.players) and min_limit_rule.check_players(
+            self.players
+        ):
+            if not len(self.find_role_players(PlayerRole.cav)) % 2 == 1:
+                return
+            if self.fill_cav:
+                self._find_best_swaps_to_role(
+                    to_role=PlayerRole.cav, swapping_players_amount=1
+                )[0].apply()
+            else:
+                self._find_best_swaps_from_role(
+                    role=PlayerRole.cav, swapping_players_amount=1
+                )[0].apply()
+            return
+
+    def _manage_arch_fills(self):
+        max_limit_rule = self.rules[LimitationType.max, PlayerRole.arch]
+        min_limit_rule = self.rules[LimitationType.min, PlayerRole.arch]
+
+        if max_limit_rule.check_players(self.players) and min_limit_rule.check_players(
+            self.players
+        ):
+            if not len(self.find_role_players(PlayerRole.arch)) % 2 == 1:
+                return
+            if self.fill_arch:
+                self._find_best_swaps_to_role(
+                    to_role=PlayerRole.arch, swapping_players_amount=1
+                )[0].apply()
+            else:
+                self._find_best_swaps_from_role(
+                    role=PlayerRole.arch, swapping_players_amount=1
+                )[0].apply()
+            return
+
+    def _manage_repeated_cav_arch_swaps(self) -> None:
+        cav_players = [
+            player for player in self.players if player.current_role == PlayerRole.cav
+        ]
+        all_to_inf_swaps = self._find_best_swaps_to_role(PlayerRole.inf, 1)
+        if (
+            self.rules[LimitationType.min, PlayerRole.cav].get_swaps_from_role_amount
+            > 0
+            and len(cav_players) % 2 == 1
+        ):
+            cav_to_inf_swaps = [
+                swap
+                for swap in all_to_inf_swaps
+                if swap.player.current_role == PlayerRole.cav
+            ]
+            cav_to_inf_swaps[0].apply()
+            return
+
+        arch_players = [
+            player for player in self.players if player.current_role == PlayerRole.arch
+        ]
+        if (
+            self.rules[LimitationType.min, PlayerRole.arch].get_swaps_from_role_amount
+            > 0
+            and len(arch_players) % 2 == 1
+        ):
+            arch_to_inf_swaps = [
+                swap
+                for swap in all_to_inf_swaps
+                if swap.player.current_role == PlayerRole.arch
+            ]
+            arch_to_inf_swaps[0].apply()
+            return
+
+    def _manage_role(self, role: PlayerRole) -> None:
+        max_limit_rule = self.rules[LimitationType.max, role]
+        min_limit_rule = self.rules[LimitationType.min, role]
+
+        if max_limit_rule.check_players(self.players) and min_limit_rule.check_players(
+            self.players
+        ):
+            if not len(self.find_role_players(role)) % 2 == 1:
+                return
+            if role == PlayerRole.cav:
+                if self.fill_cav:
+                    self._find_best_swaps_to_role(
+                        to_role=PlayerRole.cav, swapping_players_amount=1
+                    )[0].apply()
+                else:
+                    self._find_best_swaps_from_role(
+                        role=PlayerRole.cav, swapping_players_amount=1
+                    )[0].apply()
+            return
+
+        if not max_limit_rule.check_players(self.players):
+            required_swaps_from_role = max_limit_rule.get_swaps_from_role_amount(
+                self.players
+            )
+            best_swaps = self._find_best_swaps_from_role(
+                PlayerRole.cav, required_swaps_from_role
+            )
+            for swap in best_swaps:
+                swap.apply()
+
+        if not min_limit_rule.check_players(self.players):
+            required_swaps_to_role = min_limit_rule.get_swaps_into_role_amount(
+                self.players
+            )
+            best_swaps = self._find_best_swaps_to_role(
+                PlayerRole.cav, required_swaps_to_role
+            )
+            for swap in best_swaps:
+                swap.apply()
+
+    def find_role_players(self, role: PlayerRole) -> list[Player]:
+        return [player for player in self.players if player.current_role == role]
+
+    def _find_best_swaps_from_role(
+        self, role: PlayerRole, swapping_players_amount: int
+    ) -> list[RoleSwap]:
+        role_players = [
+            player for player in self.players if player.current_role == role
+        ]
+        best_swaps_per_player = [
+            RoleSwap(player, self._find_best_target_role(player), self.swap_priority)
+            for player in role_players
+        ]
+        best_swaps_per_player.sort(reverse=True)
+        return best_swaps_per_player[:swapping_players_amount]
+
+    def _find_best_target_role(self, player: Player) -> PlayerRole:
+        target_roles = self.swapping_targets_map[player.current_role]
+        if (
+            self.rules[LimitationType.max, target_roles[0]].get_swaps_into_role_amount
+            == 0
+        ):
+            return target_roles[1]
+        if (
+            self.rules[LimitationType.max, target_roles[1]].get_swaps_into_role_amount
+            == 0
+        ):
+            return target_roles[0]
+        role_swaps = [
+            RoleSwap(player, target_roles[0], self.swap_priority),
+            RoleSwap(player, target_roles[1], self.swap_priority),
+        ]
+        role_swaps.sort(reverse=True)
+        return role_swaps[0].to_role
+
+    def _find_best_swaps_to_role(
+        self,
+        to_role: PlayerRole,
+        swapping_players_amount: int,
+    ) -> list[RoleSwap]:
+        result_players: list[RoleSwap] = []
+        donor_roles = self.swapping_targets_map[to_role]
+        swap_candidates = [
+            player for player in self.players if player.current_role != to_role
+        ]
+
+        player_swap_list = [
+            RoleSwap(player, to_role, self.swap_priority) for player in swap_candidates
+        ]
+
+        player_swap_list.sort(reverse=True)
+        first_donor_category_max_swaps = self.rules[
+            LimitationType.min, donor_roles[0]
+        ].find_allowed_swaps_amount(self.players)
+        second_donor_category_max_swaps = self.rules[
+            LimitationType.min, donor_roles[1]
+        ].find_allowed_swaps_amount(self.players)
+
+        for player_swap in player_swap_list:
+            if (
+                player_swap.player.current_role == donor_roles[0]
+                and first_donor_category_max_swaps > 0
+            ):
+                result_players.append(player_swap)
+                first_donor_category_max_swaps -= 1
+            elif second_donor_category_max_swaps > 0:
+                result_players.append(player_swap)
+                second_donor_category_max_swaps -= 1
+            if len(result_players) == swapping_players_amount:
+                return result_players
+
+        # if role limits are valid, this should never get reached, however LSP is not
+        # happy about conditional returns
+        return result_players
+
+    def _find_best_role_replacements(
+        self, from_role: PlayerRole, to_role: PlayerRole, swapping_players_amount: int
+    ) -> list[Player]:
+        player_swaps_list = [
+            RoleSwap(player, to_role, self.swap_priority)
+            for player in self.players
+            if player.current_role == from_role
+        ]
+        player_swaps_list.sort(reverse=True)
+        ordered_players = [swap.player for swap in player_swaps_list]
+        return ordered_players[:swapping_players_amount]
+
 
 class MaxPlayersForClassRule(RolePickerRule):
     def check_players(self, players: list[Player]) -> bool:
@@ -73,6 +330,17 @@ class MaxPlayersForClassRule(RolePickerRule):
         if role_players_sum <= self.boundary:
             return True
         return False
+
+    def get_swaps_from_role_amount(self, players: list[Player]) -> int:
+        role_players_sum = self._count_role_players(players)
+        swaps_amount = role_players_sum - self.boundary
+        return swaps_amount if swaps_amount > 0 else 0
+
+    def get_swaps_into_role_amount(self, players: list[Player]) -> int:
+        """Returns an amount of allowed swaps INTO the role"""
+        role_players_sum = self._count_role_players(players)
+        swaps_amount = self.boundary - role_players_sum
+        return swaps_amount if swaps_amount > 0 else 0
 
 
 class MinPlayersForClassRule(RolePickerRule):
@@ -82,10 +350,15 @@ class MinPlayersForClassRule(RolePickerRule):
             return True
         return False
 
+    def get_swaps_from_role_amount(self, players: list[Player]) -> int:
+        role_players_sum = self._count_role_players(players)
+        swaps_amount = self.boundary - role_players_sum
+        return swaps_amount if swaps_amount > 0 else 0
 
-class LimitationType(str, Enum):
-    max = "max"
-    min = "min"
+    def get_swaps_into_role_amount(self, players: list[Player]) -> int:
+        role_players_sum = self._count_role_players(players)
+        swaps_amount = role_players_sum - self.boundary
+        return swaps_amount if swaps_amount > 0 else 0
 
 
 class RolePickingRulesFactory:
@@ -110,3 +383,16 @@ class RolePickingRulesFactory:
             return MaxPlayersForClassRule(role=role, boundary_per_team=limit)
         limit = min_limitation_role_mapping[role]
         return MinPlayersForClassRule(role=role, boundary_per_team=limit)
+
+    def populate_rules(self, rules_preset: RoleSwappingRules) -> RoleSwappingRules:
+        rules = [
+            (LimitationType.max, PlayerRole.inf),
+            (LimitationType.min, PlayerRole.inf),
+            (LimitationType.max, PlayerRole.arch),
+            (LimitationType.min, PlayerRole.arch),
+            (LimitationType.max, PlayerRole.cav),
+            (LimitationType.min, PlayerRole.cav),
+        ]
+        for limit_type, role in rules:
+            rules_preset.add_rule(limit_type, role, self.create_rule(limit_type, role))
+        return rules_preset
