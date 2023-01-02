@@ -15,33 +15,33 @@ class TestProficiencyClass:
         ],
     )
     def test_class_proficiency_valid_input(self, cav, inf, arch):
-        proficiency = player.ClassProficiency(cav=cav, arch=arch, inf=inf)
+        proficiency = player.RoleProficiency(cav=cav, arch=arch, inf=inf)
         assert proficiency
 
     def test_class_proficiency_flex_and_second(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.ClassProficiency(
+            proficiency = player.RoleProficiency(
                 cav=Proficiency.main, inf=Proficiency.flex, arch=Proficiency.second
             )
             assert proficiency
 
     def test_class_proficiency_double_second(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.ClassProficiency(
+            proficiency = player.RoleProficiency(
                 cav=Proficiency.main, inf=Proficiency.second, arch=Proficiency.second
             )
             assert proficiency
 
     def test_class_proficiency_double_main(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.ClassProficiency(
+            proficiency = player.RoleProficiency(
                 cav=Proficiency.main, inf=Proficiency.main, arch=Proficiency.second
             )
             assert proficiency
 
     def test_class_proficiency_no_main(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.ClassProficiency(
+            proficiency = player.RoleProficiency(
                 cav=Proficiency.flex, inf=Proficiency.offclass, arch=Proficiency.second
             )
             assert proficiency
