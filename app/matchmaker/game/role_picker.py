@@ -98,12 +98,19 @@ class RoleSwappingRules(dict):
     ) -> None:
         self[(limit_type, role)] = rule
 
+@dataclass
+class RoleSwapFactory:
+    swap_priority: list[SwapCategory]  
+
+    def __call__(self, player: Player, target_role: PlayerRole) -> RoleSwap:
+        return RoleSwap(player=player, to_role=target_role, swap_priority=self.swap_priority)
+
 
 @dataclass
 class RolePicker:
 
     players: list[Player]
-    swap_priority: list[SwapCategory]
+    swap_factory: RoleSwapFactory
     rules: RoleSwappingRules
     fill_cav: bool
     fill_arch: bool
@@ -280,7 +287,7 @@ class RolePicker:
             player for player in self.players if player.current_role == role
         ]
         best_swaps_per_player = [
-            RoleSwap(player, self._find_best_target_role(player), self.swap_priority)
+            self.swap_factory(player, self._find_best_target_role(player))
             for player in role_players
         ]
         best_swaps_per_player.sort(reverse=True)
@@ -293,7 +300,7 @@ class RolePicker:
             player for player in self.players if player.current_role == from_role
         ]
         swaps = [
-            RoleSwap(player, to_role, self.swap_priority)
+            self.swap_factory(player, to_role)
             for player in from_role_players
         ]
         swaps.sort(reverse=True)
@@ -312,8 +319,8 @@ class RolePicker:
         ):
             return target_roles[0]
         role_swaps = [
-            RoleSwap(player, target_roles[0], self.swap_priority),
-            RoleSwap(player, target_roles[1], self.swap_priority),
+            self.swap_factory(player, target_roles[0]),
+            self.swap_factory(player, target_roles[1])
         ]
         role_swaps.sort(reverse=True)
         return role_swaps[0].to_role
@@ -330,7 +337,7 @@ class RolePicker:
         ]
 
         player_swap_list = [
-            RoleSwap(player, to_role, self.swap_priority) for player in swap_candidates
+            self.swap_factory(player, to_role) for player in swap_candidates
         ]
 
         player_swap_list.sort(reverse=True)
