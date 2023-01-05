@@ -98,12 +98,15 @@ class RoleSwappingRules(dict):
     ) -> None:
         self[(limit_type, role)] = rule
 
+
 @dataclass
 class RoleSwapFactory:
-    swap_priority: list[SwapCategory]  
+    swap_priority: list[SwapCategory]
 
     def __call__(self, player: Player, target_role: PlayerRole) -> RoleSwap:
-        return RoleSwap(player=player, to_role=target_role, swap_priority=self.swap_priority)
+        return RoleSwap(
+            player=player, to_role=target_role, swap_priority=self.swap_priority
+        )
 
 
 @dataclass
@@ -299,10 +302,7 @@ class RolePicker:
         from_role_players = [
             player for player in self.players if player.current_role == from_role
         ]
-        swaps = [
-            self.swap_factory(player, to_role)
-            for player in from_role_players
-        ]
+        swaps = [self.swap_factory(player, to_role) for player in from_role_players]
         swaps.sort(reverse=True)
         return swaps[:swapping_players_amount]
 
@@ -320,7 +320,7 @@ class RolePicker:
             return target_roles[0]
         role_swaps = [
             self.swap_factory(player, target_roles[0]),
-            self.swap_factory(player, target_roles[1])
+            self.swap_factory(player, target_roles[1]),
         ]
         role_swaps.sort(reverse=True)
         return role_swaps[0].to_role
