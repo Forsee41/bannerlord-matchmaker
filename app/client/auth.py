@@ -2,10 +2,8 @@ import logging
 import os
 from dataclasses import dataclass
 
-
 from app.config import main_service_config
 from app.enums import EnvVarNames
-
 
 log = logging.getLogger(__name__)
 

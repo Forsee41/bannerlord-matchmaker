@@ -1,8 +1,8 @@
 import pytest
 
-from app.matchmaker import player
 from app.enums import Proficiency
 from app.exceptions import ProficiencyValidationError
+from app.matchmaker import player
 
 
 class TestProficiencyClass:

@@ -19,6 +19,7 @@ httpx = "^0.23.1"
 pytest = "^7.2.0"
 mypy = "^0.991"
 debugpy = "^1.6.4"
+isort = "^5.11.4"
 
 [tool.poe.tasks]
 test = "python -m pytest -v"

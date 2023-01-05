@@ -1,10 +1,11 @@
-from typing import Any, Callable
 import json
-import pytest
 from pathlib import Path
+from typing import Any, Callable
 
-from app.matchmaker.player import Player, RoleProficiency
+import pytest
+
 from app.enums import Proficiency
+from app.matchmaker.player import Player, RoleProficiency
 
 
 @pytest.fixture(scope="session")

@@ -1,10 +1,9 @@
-from pathlib import Path
 import logging
+from pathlib import Path
 
 from pydantic import BaseModel, validator
 
-from app.helpers import get_config_from_yaml, get_app_config_file_path
-
+from app.helpers import get_app_config_file_path, get_config_from_yaml
 
 log = logging.getLogger(__name__)
 DEFAULT_CONFIG_FILE_PATH = "../config-default.yaml"

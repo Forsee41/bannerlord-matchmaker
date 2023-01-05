@@ -1,13 +1,12 @@
-import os
 import logging
+import os
 from logging.config import dictConfig
 from pathlib import Path
 
 import yaml
 
-from app.exceptions import ConfigError
 from app.enums import EnvVarNames
-
+from app.exceptions import ConfigError
 
 DEFAULT_LOG_CONFIG_PATH = "logging.yaml"
 

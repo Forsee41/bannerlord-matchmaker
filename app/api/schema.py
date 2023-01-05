@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-from app.matchmaking_config import MatchmakingConfig as MMConfig
 from app.enums import PlayerRole
+from app.matchmaking_config import MatchmakingConfig as MMConfig
 
 
 class PlayerModel(BaseModel):

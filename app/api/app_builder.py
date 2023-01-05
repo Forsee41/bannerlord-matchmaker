@@ -1,9 +1,10 @@
-from fastapi import FastAPI
 import logging
 
-from app.config import main_service_config
-from . import routes
+from fastapi import FastAPI
 
+from app.config import main_service_config
+
+from . import routes
 
 log = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import random
 
-from app.matchmaking_config import Matchup, Map, MatchmakingConfig
+from app.matchmaking_config import Map, MatchmakingConfig, Matchup
 
 
 class MatchupRandomPicker:

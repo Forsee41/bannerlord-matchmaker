@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
 from typing import NamedTuple
 
-from app.matchmaker.player import Player
 from app.enums import PlayerRole
+from app.matchmaker.player import Player
 from app.matchmaking_config import ClassLimitations, SwapCategory
 
 

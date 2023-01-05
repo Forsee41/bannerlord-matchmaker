@@ -3,7 +3,6 @@ import uvicorn
 from app.api.app_builder import create_app
 from app.log_config import setup_loggers
 
-
 __VERSION__ = "0.1.0"
 setup_loggers()
 app = create_app()

@@ -1,8 +1,8 @@
 import pytest
 from pydantic import BaseModel
 
-from app.matchmaking_config import config
 from app.enums import MapType
+from app.matchmaking_config import config
 
 
 class TestLocalConfigLoading:

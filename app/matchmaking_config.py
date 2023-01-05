@@ -3,9 +3,9 @@ import logging
 from pydantic import BaseModel
 
 from app.config import env_config
+from app.enums import MapType as MapTypeEnum
+from app.enums import Proficiency
 from app.helpers import get_config_from_json, get_env_mm_config_file_path
-from app.enums import MapType as MapTypeEnum, Proficiency
-
 
 log = logging.getLogger(__name__)
 

@@ -1,9 +1,9 @@
-from dataclasses import dataclass, field
-from copy import copy
 import random
+from copy import copy
+from dataclasses import dataclass, field
 
-from app.matchmaker.player import Player
 from app.exceptions import NotEnoughPlayersError
+from app.matchmaker.player import Player
 
 
 @dataclass
