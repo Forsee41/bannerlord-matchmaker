@@ -24,6 +24,16 @@ class LimitationType(str, Enum):
 @total_ordering
 @dataclass(order=False)
 class RoleSwap:
+    """
+    A class representing player's role swap. Contains a player object, config and a target role
+    Implements total ordering comparision to easily sort a list of swaps and compare one another.
+
+    Config (swap priority) has to be manually passed into the constructor. Use RoleSwapFactory to avoid it.
+
+    All swaps comparision logic is incapsulated here. It does not respect class limits since it
+    doesn't know of them.
+    """
+
     player: Player
     to_role: PlayerRole
     swap_priority: list[SwapCategory]
@@ -73,6 +83,13 @@ class RoleSwap:
 
 
 class RolePickerRule(ABC):
+    """
+    Represents restraining rule for Role Picker. Has either upper or lower
+    class limit as a boundary.
+    Implements methods to check passed players for the rule compliance and to
+    recieve an amount of possible/required swaps from/into the role.
+    """
+
     def __init__(self, role: PlayerRole, boundary_per_team: int) -> None:
         self.role = role
         self.boundary = boundary_per_team * 2
@@ -93,6 +110,11 @@ class RolePickerRule(ABC):
 
 
 class RoleSwappingRules(dict):
+    """
+    A dict of swapping rules. Rule is accessed via a key of a limit_type - role tuple.
+    Has a convenience add_rule method.
+    """
+
     def add_rule(
         self, limit_type: LimitationType, role: PlayerRole, rule: RolePickerRule
     ) -> None:
@@ -101,6 +123,11 @@ class RoleSwappingRules(dict):
 
 @dataclass
 class RoleSwapFactory:
+    """
+    Easens role swaps constructing. Automatically passes the stored config into
+    the swaps. Requires the config in it's constructor
+    """
+
     swap_priority: list[SwapCategory]
 
     def __call__(self, player: Player, target_role: PlayerRole) -> RoleSwap:
@@ -111,6 +138,13 @@ class RoleSwapFactory:
 
 @dataclass
 class RolePicker:
+    """
+    Incapsulates the logic of choosing player's roles.
+    set_player_roles is a main interface method that returns a list of players
+    with choosen roles.
+
+    Requires a list of 12 players, a set of rules and a role swap factory.
+    """
 
     players: list[Player]
     swap_factory: RoleSwapFactory
@@ -118,18 +152,18 @@ class RolePicker:
     fill_cav: bool
     fill_arch: bool
 
-    _swapping_targets_map = {
-        PlayerRole.cav: [PlayerRole.inf, PlayerRole.arch],
-        PlayerRole.inf: [PlayerRole.cav, PlayerRole.arch],
-        PlayerRole.arch: [PlayerRole.inf, PlayerRole.cav],
-    }
-
     def set_player_roles(self) -> list[Player]:
         self._manage_cav()
         self._manage_arch()
         self._manage_inf()
         self._fix_odd_cav_arch()
         return self.players
+
+    _swapping_targets_map = {
+        PlayerRole.cav: [PlayerRole.inf, PlayerRole.arch],
+        PlayerRole.inf: [PlayerRole.cav, PlayerRole.arch],
+        PlayerRole.arch: [PlayerRole.inf, PlayerRole.cav],
+    }
 
     def _manage_inf(self) -> None:
         max_limit_rule = self.rules[LimitationType.max, PlayerRole.cav]
@@ -191,6 +225,11 @@ class RolePicker:
         cav_inf_swap = self._find_best_role_to_role_swaps(
             PlayerRole.cav, PlayerRole.inf, 1
         )[0]
+
+        # first checking whether both cav and arch amounts are odd
+        # if the best possible fixing swap is to inf, swapping both to inf,
+        # else swapping one into another
+        # swapping both into inf might not give the best possible roles!
         if cav_needs_fix and arch_needs_fix:
             possible_swaps = [cav_arch_swap, arch_cav_swap, cav_inf_swap, arch_inf_swap]
             possible_swaps.sort(reverse=True)
@@ -404,10 +443,14 @@ class MinPlayersForClassRule(RolePickerRule):
 
 
 class RolePickingRulesFactory:
+    """
+    Creates role picker rules using the limits config dict.
+    """
+
     def __init__(self, limits: ClassLimitations) -> None:
         self.limits = limits
 
-    def create_rule(
+    def _create_rule(
         self, limit_type: LimitationType, role: PlayerRole
     ) -> RolePickerRule:
         max_limitation_role_mapping = {
@@ -427,6 +470,9 @@ class RolePickingRulesFactory:
         return MinPlayersForClassRule(role=role, boundary_per_team=limit)
 
     def populate_rules(self, rules_preset: RoleSwappingRules) -> RoleSwappingRules:
+        """
+        Takes a RoleSwappingRules empty preset and populates it using the factory's limits
+        """
         rules = [
             (LimitationType.max, PlayerRole.inf),
             (LimitationType.min, PlayerRole.inf),
@@ -436,5 +482,5 @@ class RolePickingRulesFactory:
             (LimitationType.min, PlayerRole.cav),
         ]
         for limit_type, role in rules:
-            rules_preset.add_rule(limit_type, role, self.create_rule(limit_type, role))
+            rules_preset.add_rule(limit_type, role, self._create_rule(limit_type, role))
         return rules_preset
