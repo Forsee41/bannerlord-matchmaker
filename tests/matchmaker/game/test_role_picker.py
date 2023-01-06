@@ -46,8 +46,24 @@ class TestRoleSwap:
         second_player.current_role = PlayerRole.cav
         second_player._class_proficiency = first_player._class_proficiency
         first_swap = RoleSwap(first_player, PlayerRole.arch, default_swap_priority, 10)
-        second_swap = RoleSwap(second_player, PlayerRole.arch, default_swap_priority, 10)
+        second_swap = RoleSwap(
+            second_player, PlayerRole.arch, default_swap_priority, 10
+        )
         assert first_swap == second_swap
+
+    def test_role_swap_basic_comparision(
+        self, default_players: list[Player], default_swap_priority: list[SwapCategory]
+    ):
+        first_player = next(
+            player for player in default_players if player.id == "Quadri"
+        )
+        second_player = next(
+            player for player in default_players if player.id == "Relynar"
+        )
+        first_swap = RoleSwap(first_player, PlayerRole.cav, default_swap_priority, 0)
+        second_swap = RoleSwap(second_player, PlayerRole.inf, default_swap_priority, 0)
+        swap_comparision = second_swap > first_swap
+        assert swap_comparision
 
 
 if __name__ == "__main__":

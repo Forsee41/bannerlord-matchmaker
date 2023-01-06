@@ -9,7 +9,7 @@ from app.enums import Proficiency
 from app.matchmaker.player import Player, RoleProficiency
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def default_player_testdata() -> list[dict]:
     json_data_path = Path("tests/test_data/default_players.json")
     with open(json_data_path, "r") as file:
@@ -17,7 +17,7 @@ def default_player_testdata() -> list[dict]:
     return player_data
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def proficiency_constructor() -> Callable[[dict[str, str]], RoleProficiency]:
     def constructor(proficiency_data: dict[str, str]):
         player_cav_prof = Proficiency(proficiency_data["Cavalry"])
@@ -31,7 +31,7 @@ def proficiency_constructor() -> Callable[[dict[str, str]], RoleProficiency]:
     return constructor
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def player_constructor(
     proficiency_constructor: Callable[[dict[str, str]], RoleProficiency]
 ) -> Callable[[dict[str, Any]], Player]:
@@ -48,7 +48,7 @@ def player_constructor(
     return constructor
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def default_players(
     default_player_testdata: list[dict],
     player_constructor: Callable[[dict[str, Any]], Player],
