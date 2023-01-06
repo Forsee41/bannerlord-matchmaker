@@ -49,6 +49,7 @@ class Player:
         class_proficiency: RoleProficiency,
     ) -> None:
         self.nickname = id
+        self.id = id
         self.igl = igl
         self.mmr_raw = mmr
         self._class_proficiency = class_proficiency
@@ -60,6 +61,10 @@ class Player:
     @property
     def is_offclass(self) -> bool:
         return self.main != self.current_role
+
+    @property
+    def current_proficiency(self) -> Proficiency:
+        return self.get_role_proficiency(self.current_role)
 
     @property
     def mmr_reduced(self) -> int:
@@ -135,5 +140,5 @@ class Player:
         result = []
         for game_class in self._class_proficiency:
             if self._class_proficiency[game_class] == proficiency:
-                result.append(self._class_proficiency[game_class])
+                result.append(game_class)
         return result

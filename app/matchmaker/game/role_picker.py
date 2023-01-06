@@ -64,18 +64,19 @@ class RoleSwap:
     def __gt__(self, __o: RoleSwap) -> bool:
         for swap_category in self.swap_priority:
             other_matching_category: bool = (
-                __o.player.current_role == swap_category.from_role
-                and __o.to_role == swap_category.to_role
+                __o.player.current_proficiency == swap_category.from_role
+                and __o.player.get_role_proficiency(self.to_role) == swap_category.to_role
             )
             self_matching_cagegory: bool = (
-                self.player.current_role == swap_category.from_role
-                and self.to_role == swap_category.to_role
+                self.player.current_proficiency == swap_category.from_role
+                and self.player.get_role_proficiency(self.to_role) == swap_category.to_role
             )
             if self_matching_cagegory and not other_matching_category:
                 return True
             if other_matching_category and not self_matching_cagegory:
                 return False
             if self_matching_cagegory and other_matching_category:
+
                 if swap_category.desc_mmr_sort:
                     return self.player.mmr > __o.player.mmr
                 else:
