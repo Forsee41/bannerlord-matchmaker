@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import pytest
+from matchmaking_config import MatchmakingConfig, MatchmakingConfigHandler, SwapCategory
 
 from app.enums import Proficiency
 from app.matchmaker.player import Player, RoleProficiency
@@ -56,6 +57,16 @@ def default_players(
     for player_data in default_player_testdata:
         result_player_list.append(player_constructor(player_data))
     return result_player_list
+
+
+@pytest.fixture()
+def default_config() -> MatchmakingConfig:
+    return MatchmakingConfigHandler.generate_from_local_file()
+
+
+@pytest.fixture()
+def default_swap_priority(default_config: MatchmakingConfig) -> list[SwapCategory]:
+    return default_config.roles.swap_priority
 
 
 if __name__ == "__main__":
