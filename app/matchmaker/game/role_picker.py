@@ -37,10 +37,18 @@ class RoleSwap:
     player: Player
     to_role: PlayerRole
     swap_priority: list[SwapCategory]
+    avg_mmr: float
 
     @property
     def current_role(self) -> PlayerRole:
         return self.player.current_role
+
+    def __post_init__(self) -> None:
+        if self.player.current_role == self.to_role:
+            raise ValueError(
+                "Role swap target role should not be the"
+                " same as the player's current role"
+            )
 
     def __eq__(self, __o: RoleSwap) -> bool:
         return all(
@@ -129,14 +137,20 @@ class RoleSwapFactory:
     """
 
     swap_priority: list[SwapCategory]
+    avg_mmr: float = 0
+
+    def set_avg_mmr(self, avg_mmr: float) -> None:
+        self.avg_mmr = avg_mmr
 
     def __call__(self, player: Player, target_role: PlayerRole) -> RoleSwap:
         return RoleSwap(
-            player=player, to_role=target_role, swap_priority=self.swap_priority
+            player=player,
+            to_role=target_role,
+            swap_priority=self.swap_priority,
+            avg_mmr=self.avg_mmr,
         )
 
 
-@dataclass
 class RolePicker:
     """
     Incapsulates the logic of choosing player's roles.
@@ -146,11 +160,25 @@ class RolePicker:
     Requires a list of 12 players, a set of rules and a role swap factory.
     """
 
-    players: list[Player]
-    swap_factory: RoleSwapFactory
-    rules: RoleSwappingRules
-    fill_cav: bool
-    fill_arch: bool
+    def __init__(
+        self,
+        players: list[Player],
+        swap_factory: RoleSwapFactory,
+        rules: RoleSwappingRules,
+        fill_cav: bool,
+        fill_arch: bool,
+    ) -> None:
+        self.players = players
+        self.swap_factory = swap_factory 
+        self.swap_factory.set_avg_mmr(self.avg_mmr)
+        self.rules = rules
+        self.fill_cav = fill_cav
+        self.fill_arch = fill_arch
+
+    @property
+    def avg_mmr(self) -> float:
+        mmrs_list = [player.mmr for player in self.players]
+        return sum(mmrs_list) / len(mmrs_list)
 
     def set_player_roles(self) -> list[Player]:
         self._manage_cav()
