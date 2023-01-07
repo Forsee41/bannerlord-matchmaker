@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import pytest
-from matchmaking_config import MatchmakingConfig, MatchmakingConfigHandler, SwapCategory
+from app.matchmaking_config import MatchmakingConfig, MatchmakingConfigHandler, SwapCategory
 
 from app.enums import Proficiency
 from app.matchmaker.player import Player, RoleProficiency
