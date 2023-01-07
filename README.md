@@ -43,6 +43,8 @@ For testing install dev dependencies via `poetry install --with dev`,
 then run `python -m pytest` from inside the project's root
 Add tests into the `tests` folder. It's structure mirrors the project's source
 
+Run `pre-commit install` to install pre-commit formatting hooks
+
 TODO: set up a CI pipeline
 
 ## Tools
