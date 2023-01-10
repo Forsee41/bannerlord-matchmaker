@@ -42,6 +42,11 @@ class MapFacFieldNames(str, Enum):
     map = "map"
 
 
+class LimitationType(str, Enum):
+    max = "max"
+    min = "min"
+
+
 class MapType(str, Enum):
     open = "open"
     close = "close"
