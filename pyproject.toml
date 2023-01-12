@@ -21,19 +21,18 @@ debugpy = "^1.6.4"
 isort = "^5.11.4"
 pre-commit = "^2.21.0"
 autoflake = "^2.0.0"
+flake8 = "^6.0.0"
+flake8-pyproject = "^1.2.2"
 
 [tool.poe.tasks]
 test = "python -m pytest -v"
-run = "python app/main.py"
+run = "python -m app.main"
 
-[tool.pytest.ini_options]
-
-[tool.pyright]
+[tool.flake8]
+max-line-length = 88 
 
 [tool.black]
 line-length = 88
-
-[mypy]
 
 [build-system]
 requires = ["poetry-core"]

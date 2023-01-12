@@ -32,7 +32,7 @@ Setup process for local testing, api docs checking, development etc.
 1. Install dev dependencies if needed `poetry install --with dev`
 1. Set all required environment variables. Check `EnvVarNames` enum inside `enums.py` for the list of required variables
 1. Activate poetry venv `poetry shell`
-1. Run locally via `python src/main.py` from inside the project's root
+1. Run locally via `python -m app.main` from inside the project's root
 
 ## Development and testing
 
@@ -45,19 +45,18 @@ Add tests into the `tests` folder. It's structure mirrors the project's source
 
 Run `pre-commit install` to install pre-commit formatting hooks
 
-TODO: set up a CI pipeline
-
 ## Tools
 
 There are a bunch tools used in development, some of them have their config specified
 in `pyproject.toml`
 
-1. `pyright` as a main lsp and linter
+1. `pyright` as a main lsp
 1. `mypy` for static type checking
 1. `black` for code formatting
 1. `pytest` for testing
 1. `poetry` as a package and environment manager
 1. `debugpy` as a debugger engine
+1. `flake8` as an additional linter
 1. `autoflake` for pre-commit formatting
 1. `isort` for pre-commit import sorting
 1. `docker` for an image building and deployment
