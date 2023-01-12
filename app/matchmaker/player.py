@@ -1,5 +1,6 @@
 import logging
 from functools import total_ordering
+from typing import Any
 
 from app.enums import PlayerRole, Proficiency
 from app.exceptions import ProficiencyValidationError, RoleNotFoundError
@@ -111,7 +112,7 @@ class Player:
         return result
 
     def export_dict(self) -> dict:
-        result = {}
+        result: dict[str, Any] = {}
         result["nickname"] = self.nickname
         result["current_class"] = self.current_role
         result["igl"] = self.igl

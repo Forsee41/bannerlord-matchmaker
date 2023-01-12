@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import total_ordering
 
-from app.enums import LimitationType, PlayerRole
+from app.enums import PlayerRole
 from app.matchmaker.player import Player
 from app.matchmaker.player_pool import PlayerPool
 from app.matchmaking_config import ClassLimitations, SwapCategory
@@ -52,7 +52,9 @@ class RoleSwap:
     def is_swapped(self) -> bool:
         return self.player.current_role == self.to_role
 
-    def __eq__(self, __o: RoleSwap) -> bool:
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, RoleSwap):
+            return NotImplemented
         return all(
             (
                 self.player.get_role_proficiency(self.player.current_role)
@@ -63,7 +65,9 @@ class RoleSwap:
             )
         )
 
-    def __gt__(self, __o: RoleSwap) -> bool:
+    def __gt__(self, __o: object) -> bool:
+        if not isinstance(__o, RoleSwap):
+            return NotImplemented
         for swap_category in self.swap_priority:
             other_matching_category: bool = (
                 __o.player.current_proficiency == swap_category.from_role
@@ -98,7 +102,11 @@ class RoleSwap:
         self.player.current_role = self.from_role
 
 
-class RolePickerRule(ABC):
+class RolePickerRule:
+    pass
+
+
+class RoleLimitationRule(ABC, RolePickerRule):
     """
     Represents restraining rule for Role Picker. Has either upper or lower
     class limit as a boundary.
@@ -125,16 +133,20 @@ class RolePickerRule(ABC):
         ...
 
 
-class RoleSwappingRules(dict):
+class RoleSwappingRules:
     """
     A dict of swapping rules. Rule is accessed via a key of a limit_type - role tuple.
     Has a convenience add_rule method.
     """
 
-    def add_rule(
-        self, limit_type: LimitationType, role: PlayerRole, rule: RolePickerRule
-    ) -> None:
-        self[(limit_type, role)] = rule
+    def __init__(self) -> None:
+        self.min = {}
+        self.max = {}
+        self.fill = {}
+
+    min: dict[PlayerRole, MinPlayersForClassRule]
+    max: dict[PlayerRole, MaxPlayersForClassRule]
+    fill: dict[PlayerRole, FillClassRule]
 
 
 @dataclass
@@ -173,19 +185,13 @@ class RolePicker:
         players: PlayerPool,
         swap_factory: RoleSwapFactory,
         rules: RoleSwappingRules,
-        fill_cav: bool,
-        fill_arch: bool,
     ) -> None:
         self.players = players
         self.swap_factory = swap_factory
         self.swap_factory.set_avg_mmr(self.players.avg_mmr)
         self.rules = rules
-        self.fill_cav = fill_cav
-        self.fill_arch = fill_arch
-        self.target_cav_amount = self.rules[LimitationType.max, PlayerRole.cav].boundary
-        self.target_arch_amount = self.rules[
-            LimitationType.max, PlayerRole.arch
-        ].boundary
+        self.target_cav_amount = self.rules.max[PlayerRole.cav].boundary
+        self.target_arch_amount = self.rules.max[PlayerRole.arch].boundary
         self.target_inf_amount = 12 - self.target_cav_amount - self.target_arch_amount
 
     def set_player_roles(self) -> PlayerPool:
@@ -252,12 +258,12 @@ class RolePicker:
         for role in PlayerRole:
             role_max_limit_diff = (
                 self.players.get_role_players_amount(role)
-                - self.rules[LimitationType.max, role].boundary
+                - self.rules.max[role].boundary
             )
             result += role_max_limit_diff if role_max_limit_diff > 0 else 0
 
-            role_min_limit_diff = self.rules[
-                LimitationType.min, role
+            role_min_limit_diff = self.rules.min[
+                role
             ].boundary - self.players.get_role_players_amount(role)
             result += role_min_limit_diff if role_min_limit_diff > 0 else 0
         return result
@@ -287,28 +293,34 @@ class RolePicker:
         since checking for rules compliance is not respecting cav and arch fills
         """
         score = self._get_rule_unsatisfied_slots_amount()
-        if not self.fill_cav and not self.fill_arch:
+        if not self.rules.fill[PlayerRole.cav] and not self.rules.fill[PlayerRole.arch]:
             return score
-        max_cav_rule = self.rules[LimitationType.max, PlayerRole.cav]
-        min_cav_rule = self.rules[LimitationType.min, PlayerRole.cav]
+        max_cav_rule = self.rules.max[PlayerRole.cav]
+        min_cav_rule = self.rules.min[PlayerRole.cav]
         if (
             self.players.check_odd_role_players_amount(PlayerRole.cav)
             and max_cav_rule.check_players(self.players)
             and min_cav_rule.check_players(self.players)
         ):
             current_cav = self.players.get_role_players_amount(PlayerRole.cav)
-            ideal_cav_amount = current_cav + 1 if self.fill_cav else current_cav - 1
+            ideal_cav_amount = (
+                current_cav + 1 if self.rules.fill[PlayerRole.cav] else current_cav - 1
+            )
             if self.target_cav_amount != ideal_cav_amount:
                 return score + 0.5
-        max_arch_rule = self.rules[LimitationType.max, PlayerRole.arch]
-        min_arch_rule = self.rules[LimitationType.min, PlayerRole.arch]
+        max_arch_rule = self.rules.max[PlayerRole.arch]
+        min_arch_rule = self.rules.min[PlayerRole.arch]
         if (
             self.players.check_odd_role_players_amount(PlayerRole.arch)
             and max_arch_rule.check_players(self.players)
             and min_arch_rule.check_players(self.players)
         ):
             current_arch = self.players.get_role_players_amount(PlayerRole.arch)
-            ideal_arch_amount = current_arch + 1 if self.fill_cav else current_arch - 1
+            ideal_arch_amount = (
+                current_arch + 1
+                if self.rules.fill[PlayerRole.cav]
+                else current_arch - 1
+            )
             if self.target_arch_amount != ideal_arch_amount:
                 return score + 0.5
         return score
@@ -352,7 +364,7 @@ class RolePicker:
     }
 
 
-class MaxPlayersForClassRule(RolePickerRule):
+class MaxPlayersForClassRule(RoleLimitationRule):
     def check_players(self, players: PlayerPool) -> bool:
         role_players_sum = self._count_role_players(players)
         if role_players_sum <= self.boundary:
@@ -370,7 +382,7 @@ class MaxPlayersForClassRule(RolePickerRule):
         return swaps_amount if swaps_amount > 0 else 0
 
 
-class MinPlayersForClassRule(RolePickerRule):
+class MinPlayersForClassRule(RoleLimitationRule):
     def check_players(self, players: PlayerPool) -> bool:
         role_players_sum = self._count_role_players(players)
         if role_players_sum >= self.boundary:
@@ -388,6 +400,15 @@ class MinPlayersForClassRule(RolePickerRule):
         return swaps_amount if swaps_amount > 0 else 0
 
 
+@dataclass
+class FillClassRule(RolePickerRule):
+    value: bool
+    role: PlayerRole
+
+    def __bool__(self):
+        return self.value
+
+
 class RolePickingRulesFactory:
     """
     Creates role picker rules using the limits config dict.
@@ -396,38 +417,40 @@ class RolePickingRulesFactory:
     def __init__(self, limits: ClassLimitations) -> None:
         self.limits = limits
 
-    def _create_rule(
-        self, limit_type: LimitationType, role: PlayerRole
-    ) -> RolePickerRule:
-        max_limitation_role_mapping = {
-            PlayerRole.inf: self.limits.max_inf,
-            PlayerRole.arch: self.limits.max_arch,
-            PlayerRole.cav: self.limits.max_cav,
-        }
+    def _create_min_rule(self, role: PlayerRole) -> MinPlayersForClassRule:
         min_limitation_role_mapping = {
             PlayerRole.inf: self.limits.min_inf,
             PlayerRole.arch: self.limits.min_arch,
             PlayerRole.cav: self.limits.min_cav,
         }
-        if limit_type == LimitationType.max:
-            limit = max_limitation_role_mapping[role]
-            return MaxPlayersForClassRule(role=role, boundary_per_team=limit)
         limit = min_limitation_role_mapping[role]
         return MinPlayersForClassRule(role=role, boundary_per_team=limit)
+
+    def _create_fill_rule(self, role: PlayerRole) -> FillClassRule:
+        fill_rules_mapping = {
+            PlayerRole.inf: False,
+            PlayerRole.arch: self.limits.fill_arch,
+            PlayerRole.cav: self.limits.fill_cav,
+        }
+        value = fill_rules_mapping[role]
+        return FillClassRule(role=role, value=value)
+
+    def _create_max_rule(self, role: PlayerRole) -> MaxPlayersForClassRule:
+        max_limitation_role_mapping = {
+            PlayerRole.inf: self.limits.max_inf,
+            PlayerRole.arch: self.limits.max_arch,
+            PlayerRole.cav: self.limits.max_cav,
+        }
+        limit = max_limitation_role_mapping[role]
+        return MaxPlayersForClassRule(role=role, boundary_per_team=limit)
 
     def populate_rules(self, rules_preset: RoleSwappingRules) -> RoleSwappingRules:
         """
         Takes a RoleSwappingRules empty preset
         and populates it using the factory's limits
         """
-        rules = [
-            (LimitationType.max, PlayerRole.inf),
-            (LimitationType.min, PlayerRole.inf),
-            (LimitationType.max, PlayerRole.arch),
-            (LimitationType.min, PlayerRole.arch),
-            (LimitationType.max, PlayerRole.cav),
-            (LimitationType.min, PlayerRole.cav),
-        ]
-        for limit_type, role in rules:
-            rules_preset.add_rule(limit_type, role, self._create_rule(limit_type, role))
+        for role in PlayerRole:
+            rules_preset.min[role] = self._create_min_rule(role=role)
+            rules_preset.max[role] = self._create_max_rule(role=role)
+            rules_preset.fill[role] = self._create_fill_rule(role=role)
         return rules_preset
