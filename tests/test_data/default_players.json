@@ -111,8 +111,8 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Secondary",
-			"Infantry": "Main",
+			"Cavalry": "Main",
+			"Infantry": "Secondary",
 			"Archer": "Offclass"
 		},
 		"mmr": 4000,

@@ -1,8 +1,9 @@
 import pytest
 
-from app.matchmaker.player import Player
 from app.enums import PlayerRole
-from app.matchmaker.game.role_picker import RoleSwap
+from app.matchmaker.game.role_picker import RolePicker, RoleSwap
+from app.matchmaker.player import Player
+from app.matchmaker.player_pool import PlayerPool
 from app.matchmaking_config import SwapCategory
 
 
@@ -25,7 +26,7 @@ class TestRoleSwap:
     )
     def test_role_swap_validator_correct_input(
         self,
-        default_players: list[Player],
+        default_players: PlayerPool,
         default_swap_priority: list[SwapCategory],
         current: PlayerRole,
         target: PlayerRole,
@@ -36,7 +37,7 @@ class TestRoleSwap:
         assert swap
 
     def test_role_swap_equal_swaps(
-        self, default_players: list[Player], default_swap_priority: list[SwapCategory]
+        self, default_players: PlayerPool, default_swap_priority: list[SwapCategory]
     ):
         first_player = default_players[0]
         second_player = default_players[1]
@@ -52,7 +53,7 @@ class TestRoleSwap:
         assert first_swap == second_swap
 
     def test_role_swap_basic_comparision(
-        self, default_players: list[Player], default_swap_priority: list[SwapCategory]
+        self, default_players: PlayerPool, default_swap_priority: list[SwapCategory]
     ):
         first_player = next(
             player for player in default_players if player.id == "Quadri"
@@ -64,6 +65,28 @@ class TestRoleSwap:
         second_swap = RoleSwap(second_player, PlayerRole.inf, default_swap_priority, 0)
         swap_comparision = second_swap > first_swap
         assert swap_comparision
+
+
+class TestRolePicker:
+    def test_default_players_no_errors(self, default_role_picker: RolePicker):
+        default_role_picker.set_player_roles()
+        assert default_role_picker
+
+    def test_picker_changes_roles(self, default_role_picker: RolePicker):
+        players = default_role_picker.set_player_roles()
+        offclass_counter = 0
+        for player in players:
+            if player.is_offclass:
+                offclass_counter += 1
+        assert offclass_counter > 0
+
+    def test_even_role_slots(self, default_role_picker: RolePicker):
+        players = default_role_picker.set_player_roles()
+        role_slots = {role: 0 for role in PlayerRole}
+        for player in players:
+            role_slots[player.current_role] += 1
+        for slots_amount in role_slots.values():
+            assert slots_amount % 2 == 0
 
 
 if __name__ == "__main__":
