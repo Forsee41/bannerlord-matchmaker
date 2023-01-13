@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 import pytest
 
-from app.enums import MapType, Proficiency
+from app.enums import MapType
 from app.matchmaker.game.role_picker import (
     RolePicker,
     RolePickingRulesFactory,
@@ -15,6 +15,7 @@ from app.matchmaking_config import (
     MatchmakingConfig,
     MatchmakingConfigHandler,
     SwapCategory,
+    int,
 )
 
 
@@ -41,9 +42,9 @@ def default_players(
 
 PlayerConstructorInput = Callable[
     [
-        Proficiency,
-        Proficiency,
-        Proficiency,
+        int,
+        int,
+        int,
         int,
         bool,
     ],
@@ -63,12 +64,10 @@ def default_role_swapping_rules(default_config: MatchmakingConfig) -> RoleSwappi
 @pytest.fixture()
 def default_role_picker(
     default_players: PlayerPool,
-    default_config: MatchmakingConfig,
     default_role_swapping_rules: RoleSwappingRules,
 ):
     avg_mmr = default_players.avg_mmr
-    swap_priority = default_config.roles.swap_priority
-    swap_factory = RoleSwapFactory(swap_priority, avg_mmr)
+    swap_factory = RoleSwapFactory(avg_mmr)
     picker = RolePicker(
         players=default_players,
         swap_factory=swap_factory,
@@ -82,9 +81,9 @@ def player(proficiency_constructor: Callable) -> PlayerConstructorInput:
     id_counter = 0
 
     def player_constructor(
-        cav_prof: Proficiency = Proficiency.offclass,
-        arch_prof: Proficiency = Proficiency.second,
-        inf_prof: Proficiency = Proficiency.main,
+        cav_prof: int = 0,
+        arch_prof: int = 5,
+        inf_prof: int = 10,
         mmr: int = 3000,
         igl: bool = False,
     ):
@@ -96,7 +95,7 @@ def player(proficiency_constructor: Callable) -> PlayerConstructorInput:
         }
         proficiency = proficiency_constructor(proficiency_data)
         player = Player(
-            id=str(id_counter), igl=igl, mmr=mmr, class_proficiency=proficiency
+            id=str(id_counter), igl=igl, mmr=mmr, role_proficiency=proficiency
         )
         return player
 
@@ -112,7 +111,7 @@ def player_constructor(
         player = Player(
             id=player_data["id"],
             igl=player_data["igl"],
-            class_proficiency=player_proficiency,
+            role_proficiency=player_proficiency,
             mmr=player_data["mmr"],
         )
         return player
@@ -123,9 +122,9 @@ def player_constructor(
 @pytest.fixture()
 def proficiency_constructor() -> Callable[[dict[str, str]], RoleProficiency]:
     def constructor(proficiency_data: dict[str, str]):
-        player_cav_prof = Proficiency(proficiency_data["Cavalry"])
-        player_inf_prof = Proficiency(proficiency_data["Infantry"])
-        player_arch_prof = Proficiency(proficiency_data["Archer"])
+        player_cav_prof = int(proficiency_data["Cavalry"])
+        player_inf_prof = int(proficiency_data["Infantry"])
+        player_arch_prof = int(proficiency_data["Archer"])
         player_proficiency = RoleProficiency(
             cav=player_cav_prof, arch=player_arch_prof, inf=player_inf_prof
         )

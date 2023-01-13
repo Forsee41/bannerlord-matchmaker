@@ -1,6 +1,5 @@
 import pytest
 
-from app.enums import Proficiency
 from app.exceptions import ProficiencyValidationError
 from app.matchmaker import player
 
@@ -9,39 +8,21 @@ class TestProficiencyClass:
     @pytest.mark.parametrize(
         "cav,inf,arch",
         [
-            (Proficiency.main, Proficiency.second, Proficiency.offclass),
-            (Proficiency.flex, Proficiency.main, Proficiency.offclass),
-            (Proficiency.flex, Proficiency.flex, Proficiency.main),
+            (10, 5, 0),
+            (9, 10, 0),
+            (9, 9, 10),
         ],
     )
     def test_class_proficiency_valid_input(self, cav, inf, arch):
         proficiency = player.RoleProficiency(cav=cav, arch=arch, inf=inf)
         assert proficiency
 
-    def test_class_proficiency_flex_and_second(self):
-        with pytest.raises(ProficiencyValidationError):
-            proficiency = player.RoleProficiency(
-                cav=Proficiency.main, inf=Proficiency.flex, arch=Proficiency.second
-            )
-            assert proficiency
-
-    def test_class_proficiency_double_second(self):
-        with pytest.raises(ProficiencyValidationError):
-            proficiency = player.RoleProficiency(
-                cav=Proficiency.main, inf=Proficiency.second, arch=Proficiency.second
-            )
-            assert proficiency
-
     def test_class_proficiency_double_main(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.RoleProficiency(
-                cav=Proficiency.main, inf=Proficiency.main, arch=Proficiency.second
-            )
+            proficiency = player.RoleProficiency(cav=10, inf=10, arch=5)
             assert proficiency
 
     def test_class_proficiency_no_main(self):
         with pytest.raises(ProficiencyValidationError):
-            proficiency = player.RoleProficiency(
-                cav=Proficiency.flex, inf=Proficiency.offclass, arch=Proficiency.second
-            )
+            proficiency = player.RoleProficiency(cav=9, inf=0, arch=5)
             assert proficiency

@@ -1,9 +1,9 @@
 [
 	{
 		"proficiency": {
-			"Cavalry": "Main",
-			"Infantry": "Secondary",
-			"Archer": "Offclass"
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
 		},
 		"mmr": 4000,
 		"id": "Walker",
@@ -11,9 +11,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Main",
-			"Infantry": "Flex",
-			"Archer": "Flex"
+			"Cavalry": 10,
+			"Infantry": 9,
+			"Archer": 9
 		},
 		"mmr": 4200,
 		"id": "Relynar",
@@ -21,9 +21,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Secondary",
-			"Archer": "Main"
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
 		},
 		"mmr": 4300,
 		"id": "Quadri",
@@ -31,9 +31,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Main",
-			"Archer": "Secondary"
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5
 		},
 		"mmr": 4700,
 		"id": "Silver",
@@ -41,9 +41,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Main",
-			"Archer": "Secondary"
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5
 		},
 		"mmr": 3800,
 		"id": "orle",
@@ -51,9 +51,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Secondary",
-			"Archer": "Main"
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
 		},
 		"mmr": 2000,
 		"id": "Forsee",
@@ -61,9 +61,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Secondary",
-			"Infantry": "Main",
-			"Archer": "Offclass"
+			"Cavalry": 5,
+			"Infantry": 10,
+			"Archer": 0
 		},
 		"mmr": 2400,
 		"id": "Dovmont",
@@ -71,9 +71,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Secondary",
-			"Archer": "Main"
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
 		},
 		"mmr": 4100,
 		"id": "Alim",
@@ -81,9 +81,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Main",
-			"Infantry": "Secondary",
-			"Archer": "Offclass"
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
 		},
 		"mmr": 4900,
 		"id": "Relexan",
@@ -91,9 +91,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Main",
-			"Infantry": "Secondary",
-			"Archer": "Offclass"
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
 		},
 		"mmr": 6000,
 		"id": "Inspire",
@@ -101,9 +101,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Offclass",
-			"Infantry": "Secondary",
-			"Archer": "Main"
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
 		},
 		"mmr": 3800,
 		"id": "Sunny",
@@ -111,9 +111,9 @@
 	},
 	{
 		"proficiency": {
-			"Cavalry": "Main",
-			"Infantry": "Secondary",
-			"Archer": "Offclass"
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
 		},
 		"mmr": 4000,
 		"id": "Artemeis",
