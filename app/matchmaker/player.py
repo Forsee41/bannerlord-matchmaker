@@ -46,6 +46,7 @@ class Player:
         self.mmr_raw = mmr
         self._role_proficiency = role_proficiency
         self.current_role = self.main
+        self.is_assigned_igl = False
 
     def get_role_proficiency(self, role: PlayerRole):
         return self._role_proficiency[role]
