@@ -24,11 +24,11 @@ class PlayerRole(str, Enum):
     arch = "Archer"
 
 
-class Proficiency(str, Enum):
-    main = "Main"
-    second = "Secondary"
-    flex = "Flex"
-    offclass = "Offclass"
+# class Proficiency(str, Enum):
+#     main = "Main"
+#     second = "Secondary"
+#     flex = "Flex"
+#     offclass = "Offclass"
 
 
 class TeamDesignations(str, Enum):

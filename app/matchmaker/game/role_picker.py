@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import itertools
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import total_ordering
@@ -8,7 +9,9 @@ from functools import total_ordering
 from app.enums import PlayerRole
 from app.matchmaker.player import Player
 from app.matchmaker.player_pool import PlayerPool
-from app.matchmaking_config import ClassLimitations, SwapCategory
+from app.matchmaking_config import ClassLimitations
+
+log = logging.getLogger(__name__)
 
 
 @total_ordering
@@ -29,7 +32,6 @@ class RoleSwap:
 
     player: Player
     to_role: PlayerRole
-    swap_priority: list[SwapCategory]
     avg_mmr: float
 
     def __post_init__(self) -> None:
@@ -42,11 +44,17 @@ class RoleSwap:
 
     @property
     def is_promotion(self) -> bool:
-        ...
+        return self.swap_score > 0
 
     @property
     def current_role(self) -> PlayerRole:
         return self.player.current_role
+
+    @property
+    def swap_score(self) -> float:
+        target_role_prof = self.player.get_role_proficiency(self.to_role)
+        from_role_prof = self.player.get_role_proficiency(self.from_role)
+        return target_role_prof - from_role_prof
 
     @property
     def is_swapped(self) -> bool:
@@ -68,32 +76,7 @@ class RoleSwap:
     def __gt__(self, __o: object) -> bool:
         if not isinstance(__o, RoleSwap):
             return NotImplemented
-        for swap_category in self.swap_priority:
-            other_matching_category: bool = (
-                __o.player.current_proficiency == swap_category.from_role
-                and __o.player.get_role_proficiency(self.to_role)
-                == swap_category.to_role
-            )
-            self_matching_cagegory: bool = (
-                self.player.current_proficiency == swap_category.from_role
-                and self.player.get_role_proficiency(self.to_role)
-                == swap_category.to_role
-            )
-            if self_matching_cagegory and not other_matching_category:
-                return True
-            if other_matching_category and not self_matching_cagegory:
-                return False
-            if self_matching_cagegory and other_matching_category:
-
-                if swap_category.desc_mmr_sort:
-                    return self.player.mmr > __o.player.mmr
-                else:
-                    return self.player.mmr < __o.player.mmr
-
-        # there will always be at least 1 match in swap categories,
-        # but LSP is not happy about conditional returns,
-        # added bool return that will never be reached
-        return False
+        return self.swap_score > __o.swap_score
 
     def apply(self) -> None:
         self.player.current_role = self.to_role
@@ -156,7 +139,6 @@ class RoleSwapFactory:
     the swaps. Requires the config in it's constructor
     """
 
-    swap_priority: list[SwapCategory]
     avg_mmr: float = 0
 
     def set_avg_mmr(self, avg_mmr: float) -> None:
@@ -166,7 +148,6 @@ class RoleSwapFactory:
         return RoleSwap(
             player=player,
             to_role=target_role,
-            swap_priority=self.swap_priority,
             avg_mmr=self.avg_mmr,
         )
 
@@ -210,35 +191,20 @@ class RolePicker:
 
         Swaps players until target amount of players for
         each role is satisfied.
-
-        Applies only one swap that reduces unsatisfied
-        slots amount per iteration for convenience,
-        since it can (?) change the swap order.
         """
-        while self._get_target_unsatisfied_slots_amount() > 0:
-            swaps = self._create_all_swaps()
+        swaps = self._create_all_swaps()
+        swapped_players: list[Player] = []
 
-            for swap in swaps:
-                unsatisfied_slots_amount_changed = False
-                start_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
-                swap.apply()
-                result_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
-                if result_unsatisfied_slots > start_unsatisfied_slots:
-                    swap.revert()
-                elif (
-                    result_unsatisfied_slots == start_unsatisfied_slots
-                    and not swap.is_promotion
-                ):
-                    swap.revert()
-                elif (
-                    result_unsatisfied_slots == start_unsatisfied_slots
-                    and swap.is_promotion
-                ):
-                    continue
-                else:
-                    if unsatisfied_slots_amount_changed:
-                        swap.revert()
-                    unsatisfied_slots_amount_changed = True
+        for swap in swaps:
+            if swap.player in swapped_players:
+                continue
+            start_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
+            swap.apply()
+            result_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
+            if result_unsatisfied_slots > start_unsatisfied_slots:
+                swap.revert()
+            else:
+                swapped_players.append(swap.player)
 
         return self.players
 
@@ -283,6 +249,7 @@ class RolePicker:
             self.players.get_role_players_amount(PlayerRole.arch)
             - self.target_arch_amount
         )
+        log.debug(f"Unsatisfied slots: {result}")
 
         return result
 
@@ -356,6 +323,11 @@ class RolePicker:
         self.target_cav_amount = best_permutation[0]
         self.target_inf_amount = best_permutation[1]
         self.target_arch_amount = best_permutation[2]
+        log.debug(
+            f"Target cav: {self.target_cav_amount}"
+            f"Target inf: {self.target_inf_amount}"
+            f"Target arch: {self.target_arch_amount}"
+        )
 
     _swapping_targets_map = {
         PlayerRole.cav: [PlayerRole.inf, PlayerRole.arch],

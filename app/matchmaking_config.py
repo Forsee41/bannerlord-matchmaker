@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 from app.config import env_config
 from app.enums import MapType as MapTypeEnum
-from app.enums import Proficiency
 from app.helpers import get_config_from_json, get_env_mm_config_file_path
 
 log = logging.getLogger(__name__)
@@ -19,6 +18,9 @@ class ClassLimitations(BaseModel):
     min_inf: int
     fill_cav: bool
     fill_arch: bool
+
+
+int = int
 
 
 class Faction(str):
@@ -45,13 +47,13 @@ class Map(BaseModel):
 
 
 class SwapCategory(BaseModel):
-    from_role: Proficiency
-    to_role: Proficiency
+    from_role: int
+    to_role: int
     desc_mmr_sort: bool
 
 
 class Roles(BaseModel):
-    swap_priority: list[SwapCategory]
+    swap_priority: list[SwapCategory] = []
 
 
 class MatchmakingConfig(BaseModel):
