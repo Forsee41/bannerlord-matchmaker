@@ -23,6 +23,7 @@ pre-commit = "^2.21.0"
 autoflake = "^2.0.0"
 flake8 = "^6.0.0"
 flake8-pyproject = "^1.2.2"
+types-pyyaml = "^6.0.12.2"
 
 [tool.poe.tasks]
 test = "python -m pytest -v"
