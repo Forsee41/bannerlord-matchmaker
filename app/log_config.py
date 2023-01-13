@@ -40,7 +40,7 @@ def get_logger_config() -> dict:
             log_config_dict = yaml.safe_load(f)
     except Exception:
         error_msg = (
-            f"Error loading logging config file, perhaps log config path is invalid"
+            "Error loading logging config file, perhaps log config path is invalid"
         )
         logging.getLogger().error(error_msg)
         raise ConfigError(error_msg)

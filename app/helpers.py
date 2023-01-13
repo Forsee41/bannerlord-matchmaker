@@ -62,7 +62,7 @@ def get_app_config_file_path() -> Path:
     try:
         target_path = Path(config_file_path)
     except Exception:
-        error_msg = f"Config file path is invalid"
+        error_msg = "Config file path is invalid"
         log.error(error_msg)
         raise ValueError(error_msg)
 
@@ -86,7 +86,7 @@ def get_env_mm_config_file_path() -> Path:
     try:
         target_path = Path(env_config_file_path)
     except Exception:
-        error_msg = f"Config file path is invalid"
+        error_msg = "Config file path is invalid"
         log.error(error_msg)
         raise ValueError(error_msg)
 

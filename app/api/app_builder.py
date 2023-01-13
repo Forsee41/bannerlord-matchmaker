@@ -20,7 +20,8 @@ def register_events(app: FastAPI) -> None:
     async def init_app():
         log.info("Starting FastAPI app server")
         log.info(
-            f"Token refresh time is {main_service_config.token_refresh_time_seconds} seconds"
+            "Token refresh time is "
+            f"{main_service_config.token_refresh_time_seconds} seconds"
         )
 
     assert init_app
