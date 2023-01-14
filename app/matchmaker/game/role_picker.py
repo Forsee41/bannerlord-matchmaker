@@ -173,14 +173,6 @@ class RolePicker:
 
     def set_player_roles(self) -> PlayerPool:
         """
-        Sets the players roles and returns a player list with
-        applied changes
-        """
-        self.manage_player_roles()
-        return self.players
-
-    def manage_player_roles(self) -> PlayerPool:
-        """
         Sets the player roles based on current
         target players amounts for each role
 
