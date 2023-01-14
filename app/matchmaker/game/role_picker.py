@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import itertools
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -102,10 +101,7 @@ class RoleLimitationRule(ABC, RolePickerRule):
         self.boundary = boundary_per_team * 2
 
     def _count_role_players(self, players: PlayerPool) -> int:
-        current_role_players = [
-            player for player in players if player.current_role == self.role
-        ]
-        return len(current_role_players)
+        return players.get_role_players_amount(self.role)
 
     @abstractmethod
     def get_swaps_from_role_amount(self, players: PlayerPool) -> int:
@@ -180,7 +176,6 @@ class RolePicker:
         Sets the players roles and returns a player list with
         applied changes
         """
-        self._set_target_role_players_amounts()
         self.manage_player_roles()
         return self.players
 
@@ -192,20 +187,17 @@ class RolePicker:
         Swaps players until target amount of players for
         each role is satisfied.
         """
-        swaps = self._create_all_swaps()
-        swapped_players: list[Player] = []
 
-        for swap in swaps:
-            if swap.player in swapped_players:
-                continue
-            start_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
-            swap.apply()
-            result_unsatisfied_slots = self._get_target_unsatisfied_slots_amount()
-            if result_unsatisfied_slots > start_unsatisfied_slots:
-                swap.revert()
-            else:
-                swapped_players.append(swap.player)
-
+        while self._get_rule_unsatisfied_slots_amount() != 0:
+            swaps = self._create_all_swaps()
+            for swap in swaps:
+                start_unsatisfied_slots = self._get_rule_unsatisfied_slots_amount()
+                swap.apply()
+                result_unsatisfied_slots = self._get_rule_unsatisfied_slots_amount()
+                if result_unsatisfied_slots >= start_unsatisfied_slots:
+                    swap.revert()
+                else:
+                    break
         return self.players
 
     def _create_all_swaps(self) -> list[RoleSwap]:
@@ -233,101 +225,6 @@ class RolePicker:
             ].boundary - self.players.get_role_players_amount(role)
             result += role_min_limit_diff if role_min_limit_diff > 0 else 0
         return result
-
-    def _get_target_unsatisfied_slots_amount(self) -> int:
-        """FInds a sum of slots, required to get changed by current targets"""
-        result = 0
-        result += abs(
-            self.players.get_role_players_amount(PlayerRole.cav)
-            - self.target_cav_amount
-        )
-        result += abs(
-            self.players.get_role_players_amount(PlayerRole.inf)
-            - self.target_inf_amount
-        )
-        result += abs(
-            self.players.get_role_players_amount(PlayerRole.arch)
-            - self.target_arch_amount
-        )
-        log.debug(f"Unsatisfied slots: {result}")
-
-        return result
-
-    def _calculate_current_score(self) -> float:
-        """
-        Calculates a 'score' for current target slots, respecting cav and arch
-        fills. Used to find the best possible target players amounts for each role,
-        since checking for rules compliance is not respecting cav and arch fills
-        """
-        score = self._get_rule_unsatisfied_slots_amount()
-        if not self.rules.fill[PlayerRole.cav] and not self.rules.fill[PlayerRole.arch]:
-            return score
-        max_cav_rule = self.rules.max[PlayerRole.cav]
-        min_cav_rule = self.rules.min[PlayerRole.cav]
-        if (
-            self.players.check_odd_role_players_amount(PlayerRole.cav)
-            and max_cav_rule.check_players(self.players)
-            and min_cav_rule.check_players(self.players)
-        ):
-            current_cav = self.players.get_role_players_amount(PlayerRole.cav)
-            ideal_cav_amount = (
-                current_cav + 1 if self.rules.fill[PlayerRole.cav] else current_cav - 1
-            )
-            if self.target_cav_amount != ideal_cav_amount:
-                return score + 0.5
-        max_arch_rule = self.rules.max[PlayerRole.arch]
-        min_arch_rule = self.rules.min[PlayerRole.arch]
-        if (
-            self.players.check_odd_role_players_amount(PlayerRole.arch)
-            and max_arch_rule.check_players(self.players)
-            and min_arch_rule.check_players(self.players)
-        ):
-            current_arch = self.players.get_role_players_amount(PlayerRole.arch)
-            ideal_arch_amount = (
-                current_arch + 1
-                if self.rules.fill[PlayerRole.cav]
-                else current_arch - 1
-            )
-            if self.target_arch_amount != ideal_arch_amount:
-                return score + 0.5
-        return score
-
-    def _set_target_role_players_amounts(self):
-        """
-        Finds the best permutation of target slots for each role, using the current
-        players' roles, cav/arch fills and rules' boundaries
-        """
-        possible_roles_distributions = [
-            (12, 0, 0),
-            (10, 2, 0),
-            (8, 4, 0),
-            (8, 2, 2),
-            (6, 4, 2),
-            (6, 6, 0),
-        ]
-        best_permutation = (
-            self.target_cav_amount,
-            self.target_inf_amount,
-            self.target_arch_amount,
-        )
-        best_score = self._calculate_current_score()
-        for role_distribution in possible_roles_distributions:
-            for permutation in itertools.permutations(role_distribution):
-                self.target_cav_amount = permutation[0]
-                self.target_inf_amount = permutation[1]
-                self.target_arch_amount = permutation[2]
-                score = self._calculate_current_score()
-                if score < best_score:
-                    best_permutation = permutation
-                    best_score = score
-        self.target_cav_amount = best_permutation[0]
-        self.target_inf_amount = best_permutation[1]
-        self.target_arch_amount = best_permutation[2]
-        log.debug(
-            f"Target cav: {self.target_cav_amount}"
-            f"Target inf: {self.target_inf_amount}"
-            f"Target arch: {self.target_arch_amount}"
-        )
 
     _swapping_targets_map = {
         PlayerRole.cav: [PlayerRole.inf, PlayerRole.arch],
