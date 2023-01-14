@@ -167,9 +167,6 @@ class RolePicker:
         self.swap_factory = swap_factory
         self.swap_factory.set_avg_mmr(self.players.avg_mmr)
         self.rules = rules
-        self.target_cav_amount = self.rules.max[PlayerRole.cav].boundary
-        self.target_arch_amount = self.rules.max[PlayerRole.arch].boundary
-        self.target_inf_amount = 12 - self.target_cav_amount - self.target_arch_amount
 
     def set_player_roles(self) -> PlayerPool:
         """
