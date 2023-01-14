@@ -1,3 +1,5 @@
+from typing import Callable
+
 import pytest
 
 from app.enums import PlayerRole
@@ -79,6 +81,11 @@ class TestRolePicker:
             role_slots[player.current_role] += 1
         for slots_amount in role_slots.values():
             assert slots_amount % 2 == 0
+
+    def test_all_cav(self, get_role_picker: Callable[[str], RolePicker]) -> None:
+        picker = get_role_picker("all_cav")
+        result_playerpool = picker.set_player_roles()
+        assert result_playerpool.get_role_players_amount(PlayerRole.cav) == 4
 
 
 if __name__ == "__main__":

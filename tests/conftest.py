@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Callable
 
 import pytest
 
@@ -18,11 +19,14 @@ def testdata_path() -> str:
 
 
 @pytest.fixture(scope="session")
-def default_player_testdata(testdata_path: str) -> list[dict]:
-    json_data_path = Path(testdata_path + "default_players.json")
-    with open(json_data_path, "r") as file:
-        player_data = json.load(file)
-    return player_data
+def players_testdata_loader(testdata_path: str) -> Callable[[str], list[dict]]:
+    def load_players_testdata(testdata_name: str) -> list[dict]:
+        json_data_path = Path(testdata_path + testdata_name)
+        with open(json_data_path, "r") as file:
+            player_data = json.load(file)
+        return player_data
+
+    return load_players_testdata
 
 
 if __name__ == "__main__":

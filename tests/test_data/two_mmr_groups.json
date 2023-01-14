@@ -1,0 +1,122 @@
+[
+	{
+		"proficiency": {
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
+		},
+		"mmr": 4000,
+		"id": "Walker",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 10,
+			"Infantry": 9,
+			"Archer": 9
+		},
+		"mmr": 4200,
+		"id": "Relynar",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
+		},
+		"mmr": 4300,
+		"id": "Quadri",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5
+		},
+		"mmr": 4700,
+		"id": "Silver",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5
+		},
+		"mmr": 3800,
+		"id": "orle",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
+		},
+		"mmr": 2000,
+		"id": "Forsee",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 5,
+			"Infantry": 10,
+			"Archer": 0
+		},
+		"mmr": 2400,
+		"id": "Dovmont",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
+		},
+		"mmr": 4100,
+		"id": "Alim",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
+		},
+		"mmr": 4900,
+		"id": "Relexan",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
+		},
+		"mmr": 6000,
+		"id": "Inspire",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 0,
+			"Infantry": 5,
+			"Archer": 10
+		},
+		"mmr": 3800,
+		"id": "Sunny",
+		"igl": false
+	},
+	{
+		"proficiency": {
+			"Cavalry": 10,
+			"Infantry": 5,
+			"Archer": 0
+		},
+		"mmr": 4000,
+		"id": "Artemeis",
+		"igl": false
+	}
+]

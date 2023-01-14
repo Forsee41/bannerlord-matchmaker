@@ -30,14 +30,18 @@ def default_swap_priority(default_config: MatchmakingConfig) -> list[SwapCategor
 
 
 @pytest.fixture()
-def default_players(
-    default_player_testdata: list[dict],
-    player_constructor: Callable[[dict[str, Any]], Player],
-) -> PlayerPool:
-    player_pool: PlayerPool = PlayerPool([])
-    for player_data in default_player_testdata:
-        player_pool.append(player_constructor(player_data))
-    return player_pool
+def get_players(
+    player_constructor: Callable[[dict[str, Any]], PlayerPool],
+    players_testdata_loader: Callable[[str], list[dict]],
+) -> Callable[[str], PlayerPool]:
+    def create_players(playerpool_name: str) -> PlayerPool:
+        player_pool: PlayerPool = PlayerPool([])
+        players_data = players_testdata_loader(playerpool_name + ".json")
+        for player_data in players_data:
+            player_pool.append(player_constructor(player_data))
+        return player_pool
+
+    return create_players
 
 
 PlayerConstructorInput = Callable[
@@ -62,18 +66,32 @@ def default_role_swapping_rules(default_config: MatchmakingConfig) -> RoleSwappi
 
 
 @pytest.fixture()
-def default_role_picker(
-    default_players: PlayerPool,
+def default_players(get_players: Callable[[str], PlayerPool]) -> PlayerPool:
+    return get_players("default")
+
+
+@pytest.fixture()
+def default_role_picker(get_role_picker: Callable[[str], RolePicker]):
+    return get_role_picker("default")
+
+
+@pytest.fixture()
+def get_role_picker(
+    get_players: Callable[[str], PlayerPool],
     default_role_swapping_rules: RoleSwappingRules,
-):
-    avg_mmr = default_players.avg_mmr
-    swap_factory = RoleSwapFactory(avg_mmr)
-    picker = RolePicker(
-        players=default_players,
-        swap_factory=swap_factory,
-        rules=default_role_swapping_rules,
-    )
-    return picker
+) -> Callable[[str], RolePicker]:
+    def get_role_picker(player_pool: str) -> RolePicker:
+        players = get_players(player_pool)
+        avg_mmr = players.avg_mmr
+        swap_factory = RoleSwapFactory(avg_mmr)
+        picker = RolePicker(
+            players=players,
+            swap_factory=swap_factory,
+            rules=default_role_swapping_rules,
+        )
+        return picker
+
+    return get_role_picker
 
 
 @pytest.fixture
