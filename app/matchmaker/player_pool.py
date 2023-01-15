@@ -6,6 +6,16 @@ class PlayerPool(list):
     def __init__(self, players: list[Player]):
         super().__init__()
         self += players
+        self.check_pool_validity()
+
+    def check_pool_validity(self) -> None:
+        if len(self) != 12:
+            raise ValueError(
+                f"There should be 12 players in player pool, got {len(self)} instead"
+            )
+        for player in self:
+            if not self.count(player) == 1:
+                raise ValueError("PlayerPool has duplicating players")
 
     def get_role_players_amount(self, role: PlayerRole) -> int:
         return len([player for player in self if player.current_role == role])

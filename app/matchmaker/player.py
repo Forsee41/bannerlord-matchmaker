@@ -1,5 +1,4 @@
 import logging
-from functools import total_ordering
 from typing import Any
 
 from app.enums import PlayerRole
@@ -31,7 +30,6 @@ class RoleProficiency(dict):
             )
 
 
-@total_ordering
 class Player:
     def __init__(
         self,
@@ -81,14 +79,11 @@ class Player:
         result["is_offclass"] = self.is_offclass
         return result
 
+    def __repr__(self):
+        return str(self.export_dict)
+
     def __post_init__(self) -> None:
         self.current_role = self.main
-
-    def __eq__(self, other) -> bool:
-        return self.mmr == other.mmr
-
-    def __lt__(self, other) -> bool:
-        return self.mmr < other.mmr
 
     def _find_role_by_proficiency(self, proficiency: int) -> PlayerRole:
         all_matching_roles = self._find_roles_by_proficiency(proficiency)

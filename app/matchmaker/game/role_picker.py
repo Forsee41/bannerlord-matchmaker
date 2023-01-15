@@ -14,7 +14,7 @@ class RolePicker:
     """
     Incapsulates the logic of choosing player's roles.
     set_player_roles is a main interface method that returns a list of players
-    with choosen roles.
+    with chosen roles.
 
     Requires a list of 12 players, a set of rules and a role swap factory.
     """

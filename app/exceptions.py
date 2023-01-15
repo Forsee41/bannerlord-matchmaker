@@ -30,3 +30,14 @@ class NotEnoughPlayersError(LoggedException):
     """
     An error raised when player picker recieved less than 12 players
     """
+
+
+class NotEnoughIglsError(Exception):
+    """An exception raised when playerpool has no at least 2 igls"""
+
+
+class TeamsCreatingError(Exception):
+    """
+    An error raised when teams creator can't find a single
+    player combination satisfying all rules
+    """

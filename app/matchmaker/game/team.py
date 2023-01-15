@@ -21,19 +21,19 @@ class Team(list):
 
     @property
     def total_cav(self) -> int:
-        return self._count_players_by_class(PlayerRole.cav)
+        return self._count_players_by_role(PlayerRole.cav)
 
     @property
     def total_inf(self) -> int:
-        return self._count_players_by_class(PlayerRole.inf)
+        return self._count_players_by_role(PlayerRole.inf)
 
     @property
     def total_arch(self) -> int:
-        return self._count_players_by_class(PlayerRole.arch)
+        return self._count_players_by_role(PlayerRole.arch)
 
     @property
     def has_igl(self) -> bool:
         return any([player.igl for player in self])
 
-    def _count_players_by_class(self, target_class: PlayerRole) -> int:
-        return len(list(filter((lambda p: p.current_class == target_class), self)))
+    def _count_players_by_role(self, target_role: PlayerRole) -> int:
+        return len(list(filter((lambda p: p.current_role == target_role), self)))

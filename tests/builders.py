@@ -3,6 +3,13 @@ from typing import Any, Callable
 import pytest
 
 from app.enums import MapType
+from app.matchmaker.game.balancer_rules import (
+    ArchEqualityRule,
+    BalanceRule,
+    CavEqualityRule,
+    IglBalanceRule,
+    InfEqualityRule,
+)
 from app.matchmaker.game.player_balancer import PlayerBalancer
 from app.matchmaker.game.role_picker import RolePicker
 from app.matchmaker.game.role_picker_rules import (
@@ -10,13 +17,6 @@ from app.matchmaker.game.role_picker_rules import (
     RolePickingRulesFactory,
 )
 from app.matchmaker.game.role_swap import RoleSwapFactory
-from app.matchmaker.game.team_creating_rules import (
-    ArchEqualityRule,
-    BalanceRule,
-    CavEqualityRule,
-    IglBalanceRule,
-    InfEqualityRule,
-)
 from app.matchmaker.player import Player, RoleProficiency
 from app.matchmaker.player_pool import PlayerPool
 from app.matchmaking_config import (
@@ -38,14 +38,15 @@ def default_swap_priority(default_config: MatchmakingConfig) -> list[SwapCategor
 
 @pytest.fixture()
 def get_players(
-    player_constructor: Callable[[dict[str, Any]], PlayerPool],
+    player_constructor: Callable[[dict[str, Any]], Player],
     players_testdata_loader: Callable[[str], list[dict]],
 ) -> Callable[[str], PlayerPool]:
     def create_players(playerpool_name: str) -> PlayerPool:
-        player_pool: PlayerPool = PlayerPool([])
         players_data = players_testdata_loader(playerpool_name + ".json")
+        players: list[Player] = []
         for player_data in players_data:
-            player_pool.append(player_constructor(player_data))
+            players.append(player_constructor(player_data))
+        player_pool = PlayerPool(players)
         return player_pool
 
     return create_players
