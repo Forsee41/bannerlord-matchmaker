@@ -1,31 +1,31 @@
 [
 	{
 		"proficiency": {
-			"Cavalry": 10,
-			"Infantry": 5,
-			"Archer": 0
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5
 		},
-		"mmr": 4000,
+		"mmr": 1000,
 		"id": "Walker",
 		"igl": false
 	},
 	{
 		"proficiency": {
-			"Cavalry": 10,
-			"Infantry": 9,
-			"Archer": 9
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 4200,
+		"mmr": 1000,
 		"id": "Relynar",
 		"igl": false
 	},
 	{
 		"proficiency": {
 			"Cavalry": 0,
-			"Infantry": 5,
-			"Archer": 10
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 4300,
+		"mmr": 1000,
 		"id": "Quadri",
 		"igl": false
 	},
@@ -35,7 +35,7 @@
 			"Infantry": 10,
 			"Archer": 5
 		},
-		"mmr": 4700,
+		"mmr": 1000,
 		"id": "Silver",
 		"igl": false
 	},
@@ -45,77 +45,77 @@
 			"Infantry": 10,
 			"Archer": 5
 		},
-		"mmr": 3800,
+		"mmr": 1000,
 		"id": "orle",
 		"igl": false
 	},
 	{
 		"proficiency": {
 			"Cavalry": 0,
-			"Infantry": 5,
-			"Archer": 10
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 2000,
+		"mmr": 1000,
 		"id": "Forsee",
 		"igl": false
 	},
 	{
 		"proficiency": {
-			"Cavalry": 5,
+			"Cavalry": 0,
 			"Infantry": 10,
-			"Archer": 0
+			"Archer": 5 
 		},
-		"mmr": 2400,
+		"mmr": 1000,
 		"id": "Dovmont",
 		"igl": false
 	},
 	{
 		"proficiency": {
 			"Cavalry": 0,
-			"Infantry": 5,
-			"Archer": 10
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 4100,
+		"mmr": 1000,
 		"id": "Alim",
 		"igl": false
 	},
 	{
 		"proficiency": {
-			"Cavalry": 10,
-			"Infantry": 5,
-			"Archer": 0
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 4900,
+		"mmr": 2000,
 		"id": "Relexan",
 		"igl": false
 	},
 	{
 		"proficiency": {
-			"Cavalry": 10,
-			"Infantry": 5,
-			"Archer": 0
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 6000,
+		"mmr": 0,
 		"id": "Inspire",
 		"igl": false
 	},
 	{
 		"proficiency": {
 			"Cavalry": 0,
-			"Infantry": 5,
-			"Archer": 10
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 3800,
+		"mmr": 0,
 		"id": "Sunny",
 		"igl": false
 	},
 	{
 		"proficiency": {
-			"Cavalry": 10,
-			"Infantry": 5,
-			"Archer": 0
+			"Cavalry": 0,
+			"Infantry": 10,
+			"Archer": 5 
 		},
-		"mmr": 4000,
+		"mmr": 2000,
 		"id": "Artemeis",
 		"igl": false
 	}

@@ -3,12 +3,20 @@ from typing import Any, Callable
 import pytest
 
 from app.enums import MapType
+from app.matchmaker.game.player_balancer import PlayerBalancer
 from app.matchmaker.game.role_picker import RolePicker
 from app.matchmaker.game.role_picker_rules import (
     RolePickingRules,
     RolePickingRulesFactory,
 )
 from app.matchmaker.game.role_swap import RoleSwapFactory
+from app.matchmaker.game.team_creating_rules import (
+    ArchEqualityRule,
+    BalanceRule,
+    CavEqualityRule,
+    IglBalanceRule,
+    InfEqualityRule,
+)
 from app.matchmaker.player import Player, RoleProficiency
 from app.matchmaker.player_pool import PlayerPool
 from app.matchmaking_config import (
@@ -91,6 +99,37 @@ def get_role_picker(
         return picker
 
     return get_role_picker
+
+
+@pytest.fixture()
+def default_balancer_rules() -> list[BalanceRule]:
+    rules: list[BalanceRule] = []
+    rules.append(CavEqualityRule())
+    rules.append(InfEqualityRule())
+    rules.append(ArchEqualityRule())
+    rules.append(IglBalanceRule())
+    return rules
+
+
+@pytest.fixture()
+def get_player_balancer(
+    get_role_picker: Callable[[str], RolePicker],
+    default_balancer_rules: list[BalanceRule],
+) -> Callable[[str], PlayerBalancer]:
+    def get_teams_creator(player_pool: str) -> PlayerBalancer:
+        role_picker = get_role_picker(player_pool)
+        players = role_picker.set_player_roles()
+        teams_creator = PlayerBalancer(players=players, rules=default_balancer_rules)
+        return teams_creator
+
+    return get_teams_creator
+
+
+@pytest.fixture()
+def default_player_balancer(
+    get_player_balancer: Callable[[str], PlayerBalancer]
+) -> PlayerBalancer:
+    return get_player_balancer("default")
 
 
 @pytest.fixture
