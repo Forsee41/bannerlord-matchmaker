@@ -37,6 +37,9 @@ class RolePicker:
         """
 
         while self._get_required_swaps_amount() != 0:
+            # re-creating swap list after each valuable swap since each player has a
+            # total of 2 swaps in a list, with 2nd one being irrelevant after the 1st
+            # one is applied
             swaps = self._create_all_swaps()
             for swap in swaps:
                 start_required_swaps = self._get_required_swaps_amount()
