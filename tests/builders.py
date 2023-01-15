@@ -3,19 +3,18 @@ from typing import Any, Callable
 import pytest
 
 from app.enums import MapType
-from app.matchmaker.game.role_picker import (
-    RolePicker,
+from app.matchmaker.game.role_picker import RolePicker
+from app.matchmaker.game.role_picker_rules import (
+    RolePickingRules,
     RolePickingRulesFactory,
-    RoleSwapFactory,
-    RoleSwappingRules,
 )
+from app.matchmaker.game.role_swap import RoleSwapFactory
 from app.matchmaker.player import Player, RoleProficiency
 from app.matchmaker.player_pool import PlayerPool
 from app.matchmaking_config import (
     MatchmakingConfig,
     MatchmakingConfigHandler,
     SwapCategory,
-    int,
 )
 
 
@@ -57,9 +56,9 @@ PlayerConstructorInput = Callable[
 
 
 @pytest.fixture()
-def default_role_swapping_rules(default_config: MatchmakingConfig) -> RoleSwappingRules:
+def default_role_swapping_rules(default_config: MatchmakingConfig) -> RolePickingRules:
     limits = default_config.map_types[MapType.open].class_limitations
-    rules = RoleSwappingRules()
+    rules = RolePickingRules()
     rules_factory = RolePickingRulesFactory(limits)
     rules_factory.populate_rules(rules)
     return rules
@@ -78,7 +77,7 @@ def default_role_picker(get_role_picker: Callable[[str], RolePicker]):
 @pytest.fixture()
 def get_role_picker(
     get_players: Callable[[str], PlayerPool],
-    default_role_swapping_rules: RoleSwappingRules,
+    default_role_swapping_rules: RolePickingRules,
 ) -> Callable[[str], RolePicker]:
     def get_role_picker(player_pool: str) -> RolePicker:
         players = get_players(player_pool)
