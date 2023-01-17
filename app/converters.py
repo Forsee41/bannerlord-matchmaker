@@ -27,5 +27,5 @@ class PlayerConverter:
             role=player.current_role,
             mmr_raw=player.mmr_raw,
             mmr=player.mmr,
-            igl=player.is_assigned_igl,
+            role_proficiency=player.get_role_proficiency(player.current_role),
         )

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from app.enums import PatreonRole, PlayerRole
+from app.matchmaking_config import Faction
 from app.matchmaking_config import MatchmakingConfig as MMConfig
 
 
@@ -11,15 +12,35 @@ class PlayerModel(BaseModel):
     inf: int
     arch: int
     igl: bool
-    patreon: PatreonRole
+    patreon: PatreonRole = PatreonRole.patreon_0
 
 
 class PlayerReponseModel(BaseModel):
     id: str
     role: PlayerRole
+    role_proficiency: int
     mmr_raw: int
     mmr: int
-    igl: bool
+
+
+class TeamResponseModel(BaseModel):
+    players: list[PlayerReponseModel]
+    igl_id: str
+    avg_mmr: float
+
+
+class GameResponseModel:
+    team1: TeamResponseModel
+    team2: TeamResponseModel
+    avg_mmr_diff: float
+    map: str
+    faction1: Faction
+    faction2: Faction
+
+
+class MatchmakerResponeModel(BaseModel):
+    undistributed_players: list[PlayerReponseModel]
+    games: list[GameResponseModel]
 
 
 class MatchmakingConfig(MMConfig):
