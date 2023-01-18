@@ -35,5 +35,17 @@ class Team(list):
     def has_igl(self) -> bool:
         return any([player.igl for player in self])
 
+    def get_igl(self) -> Player:
+        all_igls = [player for player in self if player.igl]
+        if not all_igls:
+            all_igls = [
+                player for player in self if player.current_role == PlayerRole.inf
+            ]
+        all_igls.sort(key=lambda player: player.mmr, reverse=True)
+        try:
+            return all_igls[0]
+        except IndexError:
+            raise ValueError("Team has no infantry and no igls")
+
     def _count_players_by_role(self, target_role: PlayerRole) -> int:
         return len(list(filter((lambda p: p.current_role == target_role), self)))

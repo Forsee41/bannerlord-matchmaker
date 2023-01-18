@@ -29,7 +29,7 @@ class TeamResponseModel(BaseModel):
     avg_mmr: float
 
 
-class GameResponseModel:
+class GameResponseModel(BaseModel):
     team1: TeamResponseModel
     team2: TeamResponseModel
     avg_mmr_diff: float
@@ -39,7 +39,7 @@ class GameResponseModel:
 
 
 class MatchmakerResponeModel(BaseModel):
-    undistributed_players: list[PlayerReponseModel]
+    undistributed_player_ids: list[str]
     games: list[GameResponseModel]
 
 

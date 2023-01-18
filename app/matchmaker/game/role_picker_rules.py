@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 from app.enums import PlayerRole
 from app.matchmaker.player_pool import PlayerPool
-from app.matchmaking_config import ClassLimitations
+from app.matchmaking_config import ClassLimitations, Map, MatchmakingConfig
 
 
 class RoleLimitationRule(ABC):
@@ -124,3 +124,13 @@ class RolePickingRulesFactory:
         rules = RolePickingRules()
         self.populate_rules(rules)
         return rules
+
+
+class RoleLimitsConfigRetriever:
+    def __init__(self, config: MatchmakingConfig) -> None:
+        self.config = config
+
+    def get_map_role_limits(self, map: Map) -> ClassLimitations:
+        if map.class_limitations is None:
+            return self.config.map_types[map.type].class_limitations
+        return map.class_limitations

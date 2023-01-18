@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 from app.exceptions import NotEnoughPlayersError
 from app.matchmaker.player import Player
+from app.matchmaker.player_pool import PlayerPool
 
 
 @dataclass
@@ -45,10 +46,12 @@ class PlayerPicker:
         self.enrolled_players = input_players
         return input_players
 
-    def split_into_games(self, enrolled_players: list[Player]) -> list[list[Player]]:
+    def split_into_games(self) -> list[PlayerPool]:
         result = []
+        enrolled_players = self.enrolled_players
         enrolled_players.sort(key=(lambda player: player.mmr_raw))
         for game in range(self.games_amount):
             player_group = enrolled_players[game * 12 : (game + 1) * 12]
-            result.append(player_group)
+            player_pool = PlayerPool(player_group)
+            result.append(player_pool)
         return result

@@ -23,8 +23,7 @@ class ClassLimitations(BaseModel):
 int = int
 
 
-class Faction(str):
-    pass
+Faction = str
 
 
 class Matchup(BaseModel):
